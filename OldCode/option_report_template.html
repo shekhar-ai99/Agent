@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Option P&L Report - Run {{ run_id }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h1, h2 { color: #333; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background-color: #f4f4f4; }
+        .summary { margin-top: 20px; }
+        .no-data { color: #888; }
+        .highlight { background: #e8ffe8; font-weight: bold;}
+        .negative { color: #b30000; }
+        .positive { color: #009900; }
+    </style>
+</head>
+<body>
+    <h1>Option P&L Report - Run {{ run_id }}</h1>
+    <p>Option Trades File: {{ option_trades_file_path }}</p>
+
+    <div class="summary">
+        <h2>Summary</h2>
+        <table>
+            <tr>
+                <th>Total Trades</th>
+                <th>Profitable</th>
+                <th>Losing</th>
+                <th>Win Rate (%)</th>
+                <th>Total P&L</th>
+            </tr>
+            <tr>
+                <td>{{ option_pnl_analysis.total_trades }}</td>
+                <td>{{ option_pnl_analysis.profitable_trades }}</td>
+                <td>{{ option_pnl_analysis.losing_trades }}</td>
+                <td>{{ option_pnl_analysis.win_rate|round(2) }}</td>
+                <td class="{{ 'positive' if option_pnl_analysis.total_option_pnl > 0 else 'negative' }}">{{ option_pnl_analysis.total_option_pnl|round(2) }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <h2>P&L by Strategy</h2>
+    {% if option_pnl_analysis.pnl_by_strategy %}
+    <table>
+        <tr>
+            <th>Strategy</th>
+            <th>P&L</th>
+            <th>Trades</th>
+            <th>Win Rate (%)</th>
+        </tr>
+        {% for strategy, stats in option_pnl_analysis.pnl_by_strategy.items() %}
+        <tr>
+            <td>{{ strategy }}</td>
+            <td class="{{ 'positive' if stats.pnl > 0 else 'negative' }}">{{ stats.pnl|round(2) }}</td>
+            <td>{{ stats.trades }}</td>
+            <td>{{ stats.win_rate|round(2) }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p class="no-data">No strategy P&L data available</p>
+    {% endif %}
+
+    <h2>P&L by Day & Session</h2>
+    {% if option_pnl_analysis.pnl_by_day_session %}
+    <table>
+        <tr>
+            <th>Date</th>
+            <th>Session</th>
+            <th>P&L</th>
+            <th>Trades</th>
+        </tr>
+        {% for entry in option_pnl_analysis.pnl_by_day_session %}
+        <tr>
+            <td>{{ entry.date }}</td>
+            <td>{{ entry.session }}</td>
+            <td class="{{ 'positive' if entry.pnl > 0 else 'negative' }}">{{ entry.pnl|round(2) }}</td>
+            <td>{{ entry.trades }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p class="no-data">No day/session P&L data available</p>
+    {% endif %}
+
+    <h2>P&L by Option Type</h2>
+    {% if option_pnl_analysis.pnl_by_option_type %}
+    <table>
+        <tr><th>Option Type</th><th>P&L</th></tr>
+        {% for option_type, pnl in option_pnl_analysis.pnl_by_option_type.items() %}
+        <tr>
+            <td>{{ option_type }}</td>
+            <td class="{{ 'positive' if pnl > 0 else 'negative' }}">{{ pnl|round(2) }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p class="no-data">No option type P&L data available</p>
+    {% endif %}
+
+    <h2>P&L by Timeframe</h2>
+    {% if option_pnl_analysis.pnl_by_timeframe %}
+    <table>
+        <tr><th>Timeframe</th><th>P&L</th><th>Trades</th></tr>
+        {% for tf, stats in option_pnl_analysis.pnl_by_timeframe.items() %}
+        <tr>
+            <td>{{ tf }}</td>
+            <td class="{{ 'positive' if stats.pnl > 0 else 'negative' }}">{{ stats.pnl|round(2) }}</td>
+            <td>{{ stats.trades }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p class="no-data">No timeframe P&L data available</p>
+    {% endif %}
+
+    <h2>Trades Table (Last 20 shown)</h2>
+    {% if option_pnl_analysis.trades %}
+    <table>
+        <tr>
+            <th>Trade ID</th>
+            <th>Date</th>
+            <th>Strategy</th>
+            <th>Type</th>
+            <th>Entry</th>
+            <th>Exit</th>
+            <th>P&L</th>
+            <th>Reason</th>
+        </tr>
+        {% for t in option_pnl_analysis.trades[-20:] %}
+        <tr>
+            <td>{{ t.trade_id }}</td>
+            <td>{{ t.entry_time[:10] }}</td>
+            <td>{{ t.strategy }}</td>
+            <td>{{ t.option_type }}</td>
+            <td>{{ t.entry_premium }}</td>
+            <td>{{ t.exit_premium }}</td>
+            <td class="{{ 'positive' if t.pl > 0 else 'negative' }}">{{ t.pl|round(2) }}</td>
+            <td>{{ t.exit_reason }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p class="no-data">No trades available</p>
+    {% endif %}
+</body>
+</html>

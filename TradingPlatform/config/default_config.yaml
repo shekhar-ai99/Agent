@@ -1,0 +1,47 @@
+# Trading Platform Configuration
+# YAML format for easy reading and modification
+
+# === Account & Risk Management ===
+initial_account_balance: 100000.0
+max_position_size_percent: 5.0
+max_concurrent_trades: 5
+max_daily_loss_percent: 2.0
+risk_per_trade_percent: 1.0
+
+# === Markets to Trade ===
+enabled_markets:
+  - indian
+  - crypto
+
+indian_symbols:
+  - NIFTY50
+  - BANKNIFTY
+
+crypto_symbols:
+  - BTCUSDT
+  - ETHUSDT
+
+# === Strategies ===
+# Empty list = auto-discover all strategies
+# Specify names to selectively enable
+enabled_strategies: []
+
+strategy_min_trades_for_ranking: 10
+
+# === Simulation Parameters ===
+simulation_start_date: "2024-01-01"
+simulation_end_date: "2024-12-31"
+simulation_mode: "paper"
+bar_frequency: "5min"
+
+# === Broker Settings ===
+broker_type: "paper"
+slippage_percent: 0.0
+execution_mode: "instant"
+
+# === Logging & Output ===
+log_level: "INFO"
+log_file: "trading.log"
+output_dir: "./results"
+save_performance_table: true
+save_trade_history: true

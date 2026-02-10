@@ -1,0 +1,234 @@
+/Users/shekhar/Desktop/BOT/smartapi-python-main/.venv/bin/python /Users/shekhar/Desktop/BOT/smartapi-python-main/app/getltp.py
+(.venv) (base) shekhar@Chandras-MacBook-Air smartapi-python-main % /Users/shekhar/Desktop/BOT/smartapi-python-main/.venv/bin/python 
+/Users/shekhar/Desktop/BOT/smartapi-python-main/app/getltp.py
+/Users/shekhar/Desktop/BOT/smartapi-python-main/.venv/lib/python3.9/site-packages/urllib3/__init__.py:34: NotOpenSSLWarning: urllib3 v2.0 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+[I 250502 15:23:52 smartConnect:121] in pool
+INFO:__main__:Attempting to login...
+INFO:__main__:Login successful.
+INFO:__main__:Fetching LTP data for NIFTY 50 (99926000)
+ERROR:__main__:An error occurred: 'SmartConnect' object has no attribute 'getLtpData'
+Traceback (most recent call last):
+  File "/Users/shekhar/Desktop/BOT/smartapi-python-main/app/getltp.py", line 60, in <module>
+    ltp_data = obj.getLtpData(ltp_params)
+AttributeError: 'SmartConnect' object has no attribute 'getLtpData'
+INFO:__main__:Attempting to logout...
+INFO:__main__:Logout status: {'status': True, 'message': 'SUCCESS', 'errorcode': '', 'data': 'Logout Successfully'}
+(.venv) (base) shekhar@Chandras-MacBook-Air smartapi-python-main % /Users/shekhar/Desktop/BOT/smartapi-python-main/.venv/bin/python 
+/Users/shekhar/Desktop/BOT/smartapi-python-main/app/getltp.py
+/Users/shekhar/Desktop/BOT/smartapi-python-main/.venv/lib/python3.9/site-packages/urllib3/__init__.py:34: NotOpenSSLWarning: urllib3 v2.0 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+[I 250502 15:27:23 smartConnect:121] in pool
+INFO:__main__:Attempting to login...
+INFO:__main__:Login successful.
+INFO:__main__:Fetching market data (LTP) for NIFTY 50 (99926000) using marketData method
+ERROR:__main__:An error occurred: 'SmartConnect' object has no attribute 'marketData'
+Traceback (most recent call last):
+  File "/Users/shekhar/Desktop/BOT/smartapi-python-main/app/getltp.py", line 62, in <module>
+    snapshot_data = obj.marketData(market_data_params) # <-- Use marketData here
+AttributeError: 'SmartConnect' object has no attribute 'marketData'
+INFO:__main__:Attempting to logout...
+INFO:__main__:Logout status: {'status': True, 'message': 'SUCCESS', 'errorcode': '', 'data': 'Logout Successfully'}
+(.venv) (base) shekhar@Chandras-MacBook-Air smartapi-python-main % /Users/shekhar/Desktop/BOT/smartapi-python-main/.venv/bin/python 
+/Users/shekhar/Desktop/BOT/smartapi-python-main/app/getlivedata.py
+/Users/shekhar/Desktop/BOT/smartapi-python-main/.venv/lib/python3.9/site-packages/urllib3/__init__.py:34: NotOpenSSLWarning: urllib3 v2.0 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+[I 250502 15:28:55 smartConnect:121] in pool
+[I 250502 15:28:55 getlivedata:49] Attempting to login...
+[I 250502 15:28:56 getlivedata:59] Login successful. Obtained Auth and Feed tokens.
+[I 250502 15:28:56 getlivedata:95] Connecting to WebSocket...
+[I 250502 15:28:56 getlivedata:76] WebSocket connection opened.
+[I 250502 15:28:56 getlivedata:77] Subscribing to tokens with mode 1...
+[I 250502 15:28:56 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179936000, 'last_traded_price': 2431520, 'subscription_mode_val': 'LTP'}
+[I 250502 15:28:57 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179937000, 'last_traded_price': 2431285, 'subscription_mode_val': 'LTP'}
+[I 250502 15:28:57 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179937000, 'last_traded_price': 2431545, 'subscription_mode_val': 'LTP'}
+[I 250502 15:28:58 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179938000, 'last_traded_price': 2431440, 'subscription_mode_val': 'LTP'}
+[I 250502 15:28:58 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179938000, 'last_traded_price': 2431160, 'subscription_mode_val': 'LTP'}
+[I 250502 15:28:59 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179939000, 'last_traded_price': 2431210, 'subscription_mode_val': 'LTP'}
+[I 250502 15:28:59 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179939000, 'last_traded_price': 2431430, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:00 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179940000, 'last_traded_price': 2431080, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:00 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179940000, 'last_traded_price': 2431430, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:01 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179941000, 'last_traded_price': 2431405, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:01 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179941000, 'last_traded_price': 2431300, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:02 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179942000, 'last_traded_price': 2431235, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:02 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179942000, 'last_traded_price': 2431370, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:03 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179943000, 'last_traded_price': 2431410, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:03 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179943000, 'last_traded_price': 2431015, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:04 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179944000, 'last_traded_price': 2431015, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:04 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179944000, 'last_traded_price': 2431090, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:05 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179945000, 'last_traded_price': 2431140, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:05 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179945000, 'last_traded_price': 2431420, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:06 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179946000, 'last_traded_price': 2431680, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:06 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179946000, 'last_traded_price': 2431560, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:07 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179947000, 'last_traded_price': 2431595, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:07 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179947000, 'last_traded_price': 2431595, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:07 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179947000, 'last_traded_price': 2431415, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:08 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179948000, 'last_traded_price': 2431460, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:08 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179948000, 'last_traded_price': 2431385, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:09 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179949000, 'last_traded_price': 2431550, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:09 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179949000, 'last_traded_price': 2431550, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:09 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179949000, 'last_traded_price': 2431775, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:10 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179950000, 'last_traded_price': 2431675, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:10 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179950000, 'last_traded_price': 2431720, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:11 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179951000, 'last_traded_price': 2431555, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:11 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179951000, 'last_traded_price': 2431685, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:12 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179952000, 'last_traded_price': 2431780, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:12 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179952000, 'last_traded_price': 2431780, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:12 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179952000, 'last_traded_price': 2431560, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:13 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179953000, 'last_traded_price': 2431615, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:13 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179953000, 'last_traded_price': 2431685, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:14 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179954000, 'last_traded_price': 2431750, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:14 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179954000, 'last_traded_price': 2431815, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:15 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179955000, 'last_traded_price': 2431700, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:15 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179955000, 'last_traded_price': 2431700, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:15 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179955000, 'last_traded_price': 2431760, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:16 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179956000, 'last_traded_price': 2431825, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:16 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179956000, 'last_traded_price': 2431770, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:17 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179957000, 'last_traded_price': 2431665, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:17 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179957000, 'last_traded_price': 2431440, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:18 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179958000, 'last_traded_price': 2431615, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:18 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179958000, 'last_traded_price': 2431615, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:18 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179958000, 'last_traded_price': 2431680, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:19 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179959000, 'last_traded_price': 2431695, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:19 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179959000, 'last_traded_price': 2431460, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:20 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179960000, 'last_traded_price': 2431570, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:20 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179960000, 'last_traded_price': 2431570, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:20 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179960000, 'last_traded_price': 2431645, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:21 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179961000, 'last_traded_price': 2431780, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:21 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179961000, 'last_traded_price': 2431780, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:21 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179961000, 'last_traded_price': 2431880, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:22 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179962000, 'last_traded_price': 2431785, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:22 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179962000, 'last_traded_price': 2431555, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:23 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179963000, 'last_traded_price': 2431415, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:23 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179963000, 'last_traded_price': 2431535, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:24 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179964000, 'last_traded_price': 2431490, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:24 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179964000, 'last_traded_price': 2431680, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:25 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179965000, 'last_traded_price': 2431555, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:25 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179965000, 'last_traded_price': 2431735, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:26 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179966000, 'last_traded_price': 2431745, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:26 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179966000, 'last_traded_price': 2431625, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:27 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179967000, 'last_traded_price': 2431930, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:27 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179967000, 'last_traded_price': 2431310, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:28 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179968000, 'last_traded_price': 2431710, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:28 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179968000, 'last_traded_price': 2431450, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:29 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179969000, 'last_traded_price': 2431665, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:29 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179969000, 'last_traded_price': 2431735, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:30 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179970000, 'last_traded_price': 2431440, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:30 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179970000, 'last_traded_price': 2431600, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:31 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179971000, 'last_traded_price': 2431680, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:31 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179971000, 'last_traded_price': 2431570, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:32 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179972000, 'last_traded_price': 2431590, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:32 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179972000, 'last_traded_price': 2431560, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:33 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179973000, 'last_traded_price': 2431565, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:33 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179973000, 'last_traded_price': 2431565, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:33 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179973000, 'last_traded_price': 2431630, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:34 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179974000, 'last_traded_price': 2431665, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:34 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179974000, 'last_traded_price': 2431540, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:35 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179975000, 'last_traded_price': 2431560, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:35 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179975000, 'last_traded_price': 2431490, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:36 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179976000, 'last_traded_price': 2431540, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:36 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179976000, 'last_traded_price': 2431420, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:37 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179977000, 'last_traded_price': 2431505, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:37 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179977000, 'last_traded_price': 2431505, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:37 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179977000, 'last_traded_price': 2431360, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:38 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179978000, 'last_traded_price': 2431435, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:38 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179978000, 'last_traded_price': 2431455, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:39 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179979000, 'last_traded_price': 2431430, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:39 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179979000, 'last_traded_price': 2431420, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:40 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179980000, 'last_traded_price': 2431555, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:40 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179980000, 'last_traded_price': 2431585, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:41 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179981000, 'last_traded_price': 2431570, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:41 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179981000, 'last_traded_price': 2431570, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:41 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179981000, 'last_traded_price': 2431580, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:42 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179982000, 'last_traded_price': 2431515, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:42 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179982000, 'last_traded_price': 2431740, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:43 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179983000, 'last_traded_price': 2431710, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:43 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179983000, 'last_traded_price': 2431790, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:44 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179984000, 'last_traded_price': 2431785, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:44 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179984000, 'last_traded_price': 2431600, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:45 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179985000, 'last_traded_price': 2431100, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:45 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179985000, 'last_traded_price': 2430985, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:46 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179986000, 'last_traded_price': 2431305, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:46 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179986000, 'last_traded_price': 2431305, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:46 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179986000, 'last_traded_price': 2431390, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:47 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179987000, 'last_traded_price': 2431775, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:47 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179987000, 'last_traded_price': 2431450, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:48 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179988000, 'last_traded_price': 2431355, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:48 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179988000, 'last_traded_price': 2431380, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:49 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179989000, 'last_traded_price': 2431630, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:49 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179989000, 'last_traded_price': 2431825, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:50 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179990000, 'last_traded_price': 2431420, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:50 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179990000, 'last_traded_price': 2431405, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:51 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179991000, 'last_traded_price': 2431420, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:51 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179991000, 'last_traded_price': 2431535, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:52 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179992000, 'last_traded_price': 2431160, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:52 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179992000, 'last_traded_price': 2431160, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:52 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179992000, 'last_traded_price': 2431490, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:53 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179993000, 'last_traded_price': 2431575, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:53 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179993000, 'last_traded_price': 2431575, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:53 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179993000, 'last_traded_price': 2431610, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:54 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179994000, 'last_traded_price': 2431475, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:54 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179994000, 'last_traded_price': 2431415, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:55 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179995000, 'last_traded_price': 2431160, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:55 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179995000, 'last_traded_price': 2431120, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:56 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179996000, 'last_traded_price': 2431200, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:56 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179996000, 'last_traded_price': 2431200, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:56 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179996000, 'last_traded_price': 2431205, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:57 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179997000, 'last_traded_price': 2431290, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:57 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179997000, 'last_traded_price': 2431260, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:58 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179998000, 'last_traded_price': 2431245, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:58 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179998000, 'last_traded_price': 2431120, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:59 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179999000, 'last_traded_price': 2431105, 'subscription_mode_val': 'LTP'}
+[I 250502 15:29:59 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746179999000, 'last_traded_price': 2431365, 'subscription_mode_val': 'LTP'}
+[I 250502 15:30:00 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746180000000, 'last_traded_price': 2431220, 'subscription_mode_val': 'LTP'}
+[I 250502 15:30:01 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746180001000, 'last_traded_price': 2431220, 'subscription_mode_val': 'LTP'}
+[I 250502 15:30:02 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746180002000, 'last_traded_price': 2431220, 'subscription_mode_val': 'LTP'}
+[I 250502 15:30:03 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746180003000, 'last_traded_price': 2431220, 'subscription_mode_val': 'LTP'}
+[I 250502 15:30:04 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746180004000, 'last_traded_price': 2431220, 'subscription_mode_val': 'LTP'}
+[I 250502 15:30:05 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746180005000, 'last_traded_price': 2431220, 'subscription_mode_val': 'LTP'}
+[I 250502 15:30:06 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746180006000, 'last_traded_price': 2431220, 'subscription_mode_val': 'LTP'}
+[I 250502 15:30:07 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746180007000, 'last_traded_price': 2431220, 'subscription_mode_val': 'LTP'}
+[I 250502 15:30:08 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746180008000, 'last_traded_price': 2431220, 'subscription_mode_val': 'LTP'}
+[I 250502 15:30:09 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746180009000, 'last_traded_price': 2431220, 'subscription_mode_val': 'LTP'}
+[I 250502 15:30:10 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746180010000, 'last_traded_price': 2431220, 'subscription_mode_val': 'LTP'}
+[I 250502 15:30:11 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746180011000, 'last_traded_price': 2431220, 'subscription_mode_val': 'LTP'}
+[I 250502 15:30:12 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746180012000, 'last_traded_price': 2431220, 'subscription_mode_val': 'LTP'}
+[I 250502 15:30:13 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746180013000, 'last_traded_price': 2431220, 'subscription_mode_val': 'LTP'}
+[I 250502 15:30:14 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746180014000, 'last_traded_price': 2431220, 'subscription_mode_val': 'LTP'}
+[I 250502 15:30:15 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746180015000, 'last_traded_price': 2431220, 'subscription_mode_val': 'LTP'}
+[I 250502 15:30:16 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746180016000, 'last_traded_price': 2431220, 'subscription_mode_val': 'LTP'}
+[I 250502 15:30:17 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746180017000, 'last_traded_price': 2431220, 'subscription_mode_val': 'LTP'}
+[I 250502 15:30:18 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746180018000, 'last_traded_price': 2431220, 'subscription_mode_val': 'LTP'}
+[I 250502 15:30:19 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746180019000, 'last_traded_price': 2431220, 'subscription_mode_val': 'LTP'}
+[I 250502 15:30:20 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746180020000, 'last_traded_price': 2431220, 'subscription_mode_val': 'LTP'}
+[I 250502 15:30:21 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746180021000, 'last_traded_price': 2431220, 'subscription_mode_val': 'LTP'}
+[I 250502 15:30:22 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746180022000, 'last_traded_price': 2431220, 'subscription_mode_val': 'LTP'}
+[I 250502 15:30:23 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746180023000, 'last_traded_price': 2431220, 'subscription_mode_val': 'LTP'}
+[I 250502 15:30:24 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746180024000, 'last_traded_price': 2431220, 'subscription_mode_val': 'LTP'}
+[I 250502 15:30:25 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746180025000, 'last_traded_price': 2431220, 'subscription_mode_val': 'LTP'}
+[I 250502 15:30:26 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746180026000, 'last_traded_price': 2431220, 'subscription_mode_val': 'LTP'}
+[I 250502 15:30:27 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746180027000, 'last_traded_price': 2431220, 'subscription_mode_val': 'LTP'}
+[I 250502 15:30:28 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746180028000, 'last_traded_price': 2431220, 'subscription_mode_val': 'LTP'}
+[I 250502 15:30:29 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746180029000, 'last_traded_price': 2431220, 'subscription_mode_val': 'LTP'}
+[I 250502 15:30:30 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746180030000, 'last_traded_price': 2431220, 'subscription_mode_val': 'LTP'}
+[I 250502 15:30:31 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746180031000, 'last_traded_price': 2431220, 'subscription_mode_val': 'LTP'}
+[I 250502 15:30:32 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746180032000, 'last_traded_price': 2431220, 'subscription_mode_val': 'LTP'}
+[I 250502 15:30:33 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746180033000, 'last_traded_price': 2431220, 'subscription_mode_val': 'LTP'}
+[I 250502 15:30:34 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746180034000, 'last_traded_price': 2431220, 'subscription_mode_val': 'LTP'}
+[I 250502 15:30:35 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746180035000, 'last_traded_price': 2431220, 'subscription_mode_val': 'LTP'}
+[I 250502 15:30:36 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746180036000, 'last_traded_price': 2431220, 'subscription_mode_val': 'LTP'}
+[I 250502 15:30:37 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746180037000, 'last_traded_price': 2431220, 'subscription_mode_val': 'LTP'}
+[I 250502 15:30:38 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746180038000, 'last_traded_price': 2431220, 'subscription_mode_val': 'LTP'}
+[I 250502 15:30:39 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746180039000, 'last_traded_price': 2431220, 'subscription_mode_val': 'LTP'}
+[I 250502 15:30:40 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746180040000, 'last_traded_price': 2431220, 'subscription_mode_val': 'LTP'}
+[I 250502 15:30:41 getlivedata:66] Tick Data: {'subscription_mode': 1, 'exchange_type': 1, 'token': '99926000', 'sequence_number': 0, 'exchange_timestamp': 1746180041000, 'last_traded_price': 2431220, 'subscription_mode_val': 'LTP'}
+^C[W 250502 15:30:41 smartWebSocketV2:319] Attempting to resubscribe/reconnect (Attempt 1)...
+^C[E 250502 15:30:42 getlivedata:82] WebSocket Error: Connection closed
+[W 250502 15:30:42 smartWebSocketV2:343] Connection closed due to max retry attempts reached.
+[I 250502 15:30:42 getlivedata:99] WebSocket connected. Waiting for ticks (Press Ctrl+C to stop)...
+^C[I 250502 15:30:45 getlivedata:104] Interrupted by user.
+Traceback (most recent call last):
+  File "/Users/shekhar/Desktop/BOT/smartapi-python-main/app/getlivedata.py", line 109, in <module>
+    if sws and sws.is_connected():
+AttributeError: 'SmartWebSocketV2' object has no attribute 'is_connected'
+(.venv) (base) shekhar@Chandras-MacBook-Air smartapi-python-main % 

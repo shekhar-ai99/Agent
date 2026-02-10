@@ -1,0 +1,1288 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2821
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 HelveticaNeue;}
+{\colortbl;\red255\green255\blue255;\red21\green21\blue22;\red255\green255\blue255;}
+{\*\expandedcolortbl;;\cssrgb\c10588\c10980\c11373;\cssrgb\c100000\c100000\c100000;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs32 \cf2 \cb3 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 1st Indicator : - // \'a9 Trading Legend\
+//@version=5\
+indicator("TradingLegend RangeLevels", overlay=true, max_lines_count=500, max_labels_count=500)\
+\
+// Input Parameters for multiplying factor and ratio\
+\
+rangeAnchorIn = input.string(title="Timeframe\uc0\u8207   \u8207   \u8207   \u8207 ", defval="Daily", options=["Auto", "Daily", "Weekly", "Monthly", "Quarterly", "Yearly"], inline="Factor")\
+maxHistoricalRangeIn = input.int(title="\uc0\u8207   \u8207   \u8207   \u8207   \u8207   \u8207 History", defval=10, minval=1, maxval=200, inline="Factor", display = display.data_window)\
+\
+rangeFactor  = input.float(title="Range Factor", defval=3.07, minval=1.000, maxval=9.999, step=0.010, inline = "Range")\
+splitRangeIn = input.string(title="\uc0\u8207   \u8207   \u8207   \u8207   \u8207   \u8207   \u8207 Range ", defval="Full", options=["Full", "Half", "One Third", "Quarter"], inline = "Range")\
+\
+//isDailyBasedInput = input.bool(title="Use Daily-based Values", defval=true, display = display.data_window, tooltip="When this option is unchecked, Pivot Points will use intraday data while calculating on intraday charts. If Extended Hours are displayed on the chart, they will be taken into account during the pivot level calculation. If intraday OHLC values are different from daily-based values (normal for stocks), the pivot levels will also differ.")\
+lineStyle = input.string("Dotted", "\uc0\u8207   \u8207   \u8207   Style\u8207   \u8207   \u8207   \u8207   \u8207   \u8207   \u8207   \u8207   \u8207   \u8207 ", options=["Dotted", "Dashed", "Line"], inline="style", display = display.data_window)\
+linewidthInput = input.int(title="\uc0\u8207   \u8207   \u8207   \u8207   \u8207   \u8207   \u8207 Wdth\u8207   \u8207 ", defval=1, minval=1, maxval=100, inline = "style",  display = display.data_window)\
+showLabelsInput = input.bool(title="Show Labels\uc0\u8207   \u8207   \u8207   \u8207   \u8207   \u8207 ", defval=true, inline="show", display = display.data_window)\
+showPricesInput = input.bool(title="Show Prices\uc0\u8207   \u8207   \u8207   \u8207   \u8207   \u8207 ", defval=false, inline="show", display = display.data_window)\
+positionLabelsInput = input.string("Left", " ", options=["Left", "Right"], inline="show",  display = display.data_window)\
+\
+colorP0=color.rgb(200, 250, 200)\
+colorS1=color.rgb(185, 250, 185)\
+colorS2=color.rgb(170, 250, 170)\
+colorS3=color.rgb(155, 250, 155)\
+colorS4=color.rgb(140, 250, 140)\
+colorS5=color.rgb(125, 250, 125)\
+colorS6=color.rgb(110, 250, 110)\
+colorS7=color.rgb(095, 250, 095)\
+colorS8=color.rgb(080, 225, 080)\
+colorS0=color.rgb(065, 175, 065)\
+colorS9=color.rgb(050, 200, 050)\
+colorR1=color.rgb(255, 175, 175)\
+colorR2=color.rgb(255, 160, 160)\
+colorR3=color.rgb(255, 145, 145)\
+colorR4=color.rgb(255, 130, 130)\
+colorR5=color.rgb(255, 115, 115)\
+colorR6=color.rgb(225, 100, 100)\
+colorR7=color.rgb(200, 085, 085)\
+colorR8=color.rgb(175, 070, 070)\
+colorR9=color.rgb(175, 055, 055)\
+colorR0=color.rgb(255, 040, 040)\
+\
+pColorInput = input.color(colorP0, "O\uc0\u8207   \u8207   \u8207 ", inline="L1", display = display.data_window)\
+pShowInput = input.bool(true, "", inline="L1", display = display.data_window)\
+s1ColorInput = input.color(colorS1, "\uc0\u8207   \u8207   \u8207   \u8207   \u8207   \u8207   \u8207   \u8207 S1", inline="L1" , display = display.data_window)\
+s1ShowInput = input.bool(true, "", inline="L1", display = display.data_window)\
+r1ColorInput = input.color(colorR1, "\uc0\u8207   \u8207   \u8207   \u8207   \u8207   \u8207   \u8207   \u8207 R1", inline="L1", display = display.data_window)\
+r1ShowInput = input.bool(true, "", inline="L1", display = display.data_window)\
+\
+s2ColorInput = input.color(colorS2, "\uc0\u8207 S2", inline="L2" , display = display.data_window)\
+s2ShowInput = input.bool(true, "", inline="L2", display = display.data_window)\
+s3ColorInput = input.color(colorS3, "\uc0\u8207   \u8207   \u8207   \u8207   \u8207   \u8207   \u8207   \u8207 S3", inline="L2" , display = display.data_window)\
+s3ShowInput = input.bool(true, "", inline="L2", display = display.data_window)\
+s4ColorInput = input.color(colorS4, "\uc0\u8207   \u8207   \u8207   \u8207   \u8207   \u8207   \u8207   \u8207 S4", inline="L2" , display = display.data_window)\
+s4ShowInput = input.bool(true, "", inline="L2", display = display.data_window)\
+\
+r2ColorInput = input.color(colorR2, "\uc0\u8207 R2", inline="L3", display = display.data_window)\
+r2ShowInput = input.bool(true, "", inline="L3", display = display.data_window)\
+r3ColorInput = input.color(colorR3, "\uc0\u8207   \u8207   \u8207   \u8207   \u8207   \u8207   \u8207   \u8207 R3", inline="L3", display = display.data_window)\
+r3ShowInput = input.bool(true, "", inline="L3", display = display.data_window)\
+r4ColorInput = input.color(colorR4, "\uc0\u8207   \u8207   \u8207   \u8207   \u8207   \u8207   \u8207   \u8207 R4", inline="L3", display = display.data_window)\
+r4ShowInput = input.bool(true, "", inline="L3", display = display.data_window)\
+\
+s5ColorInput = input.color(colorS5, "\uc0\u8207 S5", inline="L4" , display = display.data_window)\
+s5ShowInput = input.bool(false, "", inline="L4", display = display.data_window)\
+s6ColorInput = input.color(colorS6, "\uc0\u8207   \u8207   \u8207   \u8207   \u8207   \u8207   \u8207   \u8207 S6", inline="L4" , display = display.data_window)\
+s6ShowInput = input.bool(false, "", inline="L4", display = display.data_window)\
+s7ColorInput = input.color(colorS7, "\uc0\u8207   \u8207   \u8207   \u8207   \u8207   \u8207   \u8207   \u8207 S7", inline="L4" , display = display.data_window)\
+s7ShowInput = input.bool(false, "", inline="L4", display = display.data_window)\
+\
+r5ColorInput = input.color(colorR5, "\uc0\u8207 R5", inline="L5", display = display.data_window)\
+r5ShowInput = input.bool(false, "", inline="L5", display = display.data_window)\
+r6ColorInput = input.color(colorR6, "\uc0\u8207   \u8207   \u8207   \u8207   \u8207   \u8207   \u8207   \u8207 R6", inline="L5", display = display.data_window)\
+r6ShowInput = input.bool(false, "", inline="L5", display = display.data_window)\
+r7ColorInput = input.color(colorR7, "\uc0\u8207   \u8207   \u8207   \u8207   \u8207   \u8207   \u8207   \u8207 R7", inline="L5", display = display.data_window)\
+r7ShowInput = input.bool(false, "", inline="L5", display = display.data_window)\
+\
+s8ColorInput = input.color(colorS5, "\uc0\u8207 S8", inline="L6" , display = display.data_window)\
+s8ShowInput = input.bool(false, "", inline="L6", display = display.data_window)\
+s9ColorInput = input.color(colorS6, "\uc0\u8207   \u8207   \u8207   \u8207   \u8207   \u8207   \u8207   \u8207 S9", inline="L6" , display = display.data_window)\
+s9ShowInput = input.bool(false, "", inline="L6", display = display.data_window)\
+s0ColorInput = input.color(colorS7, "\uc0\u8207   \u8207   \u8207   \u8207   \u8207   \u8207   \u8207   \u8207 S0", inline="L6" , display = display.data_window)\
+s0ShowInput = input.bool(false, "", inline="L6", display = display.data_window)\
+\
+r8ColorInput = input.color(colorR5, "\uc0\u8207 R8", inline="L7", display = display.data_window)\
+r8ShowInput = input.bool(false, "", inline="L7", display = display.data_window)\
+r9ColorInput = input.color(colorR6, "\uc0\u8207   \u8207   \u8207   \u8207   \u8207   \u8207   \u8207   \u8207 R9", inline="L7", display = display.data_window)\
+r9ShowInput = input.bool(false, "", inline="L7", display = display.data_window)\
+r0ColorInput = input.color(colorR7, "\uc0\u8207   \u8207   \u8207   \u8207   \u8207   \u8207   \u8207   \u8207 R0", inline="L7", display = display.data_window)\
+r0ShowInput = input.bool(false, "", inline="L7", display = display.data_window)\
+\
+\
+autoAnchor = switch\
+    timeframe.isintraday => timeframe.multiplier <= 15 ? "1D" : "1W"\
+    timeframe.isdaily    => "1M"\
+    => "12M"\
+\
+rangeTimeframe = switch rangeAnchorIn\
+    "Auto"      => autoAnchor\
+    "Daily"     => "1D"\
+    "Weekly"    => "1W"\
+    "Monthly"   => "1M"\
+    "Quarterly" => "3M"\
+    "Yearly"    => "12M"\
+    => "12M"\
+\
+//@variable The number of years in the selected Pivot period\
+rangeYearMultiplier = switch rangeAnchorIn\
+    "Biyearly"       => 2\
+    "Triyearly"      => 3\
+    "Quinquennially" => 5\
+    "Decennially"    => 10\
+    => 1\
+\
+// numOfRangeLevels = switch splitRangeIn\
+//     "Full Range" => 9\
+//     "Half Range" => 13\
+//     "One Third"  => 17\
+//     "One Fourth" => 21\
+\
+range_levels(para_splitRange, para_timeFrameChange) =>\
+    // Calculate earlier day's candle length\
+    earlierHigh = request.security(syminfo.tickerid, rangeTimeframe, high[1], gaps = barmerge.gaps_off, lookahead=barmerge.lookahead_on)\
+    earlierLow = request.security(syminfo.tickerid, rangeTimeframe, low[1], gaps = barmerge.gaps_off, lookahead=barmerge.lookahead_on)\
+    earlierCandleLength = earlierHigh - earlierLow\
+\
+    // Calculate today's Range based earlier day's full Range \
+    setupRange = earlierCandleLength / rangeFactor \
+\
+    // Apply DayOfWeek wise correction in Range\
+    //if timeframe.isintraday\
+    //    earlierDayOfWeek = dayofweek(request.security(syminfo.tickerid, "D", time[1], gaps = barmerge.gaps_off, lookahead=barmerge.lookahead_on))\
+    //    setupRange := setupRange + array.get(dayAdjustments, earlierDayOfWeek)\
+\
+    // Convert to small range dividing by rangeSplit.\
+    smallRange = switch para_splitRange\
+        "Full"       => 1\
+        "Half"       => 2\
+        "One Third"  => 3\
+        "Quarter"    => 4\
+\
+    setupRange := setupRange / smallRange\
+\
+    // Get current day's open value and calculate support resistance levels\
+    todayOpen = request.security(syminfo.tickerid, rangeTimeframe, open, gaps = barmerge.gaps_off, lookahead=barmerge.lookahead_on)\
+\
+    S1 = todayOpen - setupRange\
+    S2 = S1 - setupRange\
+    S3 = S2 - setupRange\
+    S4 = S3 - setupRange\
+    S5 = S4 - setupRange\
+    S6 = S5 - setupRange\
+    S7 = S6 - setupRange\
+    S8 = S7 - setupRange\
+    S9 = S8 - setupRange\
+    S0 = S9 - setupRange\
+\
+    R1 = todayOpen + setupRange\
+    R2 = R1 + setupRange\
+    R3 = R2 + setupRange\
+    R4 = R3 + setupRange\
+    R5 = R4 + setupRange\
+    R6 = R5 + setupRange\
+    R7 = R6 + setupRange\
+    R8 = R7 + setupRange\
+    R9 = R8 + setupRange\
+    R0 = R9 + setupRange\
+    \
+    rangeLevelPoints = array.new_float(21)\
+    array.set(rangeLevelPoints, 0, todayOpen)\
+    array.set(rangeLevelPoints, 1, R1)\
+    array.set(rangeLevelPoints, 2, S1)\
+    array.set(rangeLevelPoints, 3, R2)\
+    array.set(rangeLevelPoints, 4, S2)\
+    array.set(rangeLevelPoints, 5, R3)\
+    array.set(rangeLevelPoints, 6, S3)\
+    array.set(rangeLevelPoints, 7, R4)\
+    array.set(rangeLevelPoints, 8, S4)\
+    array.set(rangeLevelPoints, 9, R5)\
+    array.set(rangeLevelPoints, 10, S5)\
+    array.set(rangeLevelPoints, 11, R6)\
+    array.set(rangeLevelPoints, 12, S6)\
+    array.set(rangeLevelPoints, 13, R7)\
+    array.set(rangeLevelPoints, 14, S7)\
+    array.set(rangeLevelPoints, 15, R8)\
+    array.set(rangeLevelPoints, 16, S8)\
+    array.set(rangeLevelPoints, 17, R9)\
+    array.set(rangeLevelPoints, 18, S9)\
+    array.set(rangeLevelPoints, 19, R0)\
+    array.set(rangeLevelPoints, 20, S0)\
+   \
+    rangeLevelPoints\
+\
+//  Create global variables \
+\
+var bool isDailyBasedInput = true\
+\
+type graphicSettings\
+    string levelName\
+    color levelColor\
+    bool showLevel\
+\
+var graphicSettingsArray = array.from(\
+      graphicSettings.new("O0", pColorInput, pShowInput),\
+      graphicSettings.new("R1", r1ColorInput, r1ShowInput), graphicSettings.new("S1", s1ColorInput, s1ShowInput),\
+      graphicSettings.new("R2", r2ColorInput, r2ShowInput), graphicSettings.new("S2", s2ColorInput, s2ShowInput),\
+      graphicSettings.new("R3", r3ColorInput, r3ShowInput), graphicSettings.new("S3", s3ColorInput, s3ShowInput),\
+      graphicSettings.new("R4", r4ColorInput, r4ShowInput), graphicSettings.new("S4", s4ColorInput, s4ShowInput),\
+      graphicSettings.new("R5", r5ColorInput, r5ShowInput), graphicSettings.new("S5", s5ColorInput, s5ShowInput),\
+      graphicSettings.new("R6", r6ColorInput, r6ShowInput), graphicSettings.new("S6", s6ColorInput, s6ShowInput),\
+      graphicSettings.new("R7", r7ColorInput, r7ShowInput), graphicSettings.new("S7", s7ColorInput, s7ShowInput),\
+      graphicSettings.new("R8", r8ColorInput, r8ShowInput), graphicSettings.new("S8", s8ColorInput, s8ShowInput),\
+      graphicSettings.new("R9", r9ColorInput, r9ShowInput), graphicSettings.new("S9", s9ColorInput, s9ShowInput),\
+      graphicSettings.new("R0", r0ColorInput, r0ShowInput), graphicSettings.new("S0", s0ColorInput, s0ShowInput))\
+\
+type rangeGraphic\
+    line rangeLine\
+    label rangeLabel\
+\
+method delete(rangeGraphic graphic) =>\
+    graphic.rangeLine.delete()\
+    graphic.rangeLabel.delete()\
+\
+var drawnGraphics = matrix.new<rangeGraphic>()\
+\
+localRangeTimeframeChange = timeframe.change(rangeTimeframe) and year % rangeYearMultiplier == 0\
+securityRangeTimeframeChange = timeframe.change(timeframe.period) and year % rangeYearMultiplier == 0\
+\
+rangeTimeframeChangeCounter(condition) => \
+    var count = 0\
+    if condition and bar_index > 0\
+        count += 1\
+    count\
+    \
+localRanges = range_levels(splitRangeIn, localRangeTimeframeChange)\
+securityRanges = range_levels(splitRangeIn, securityRangeTimeframeChange)\
+\
+securityTimeframe = timeframe.isintraday ? "1D" : timeframe.period\
+[securityranges, securityrangeCounter] = request.security(syminfo.tickerid, rangeTimeframe, [securityRanges, rangeTimeframeChangeCounter(securityRangeTimeframeChange)], lookahead = barmerge.lookahead_on)\
+rangePointsArray = isDailyBasedInput ? securityRanges : localRanges\
+\
+//@function Sets the ending points of the currently active ranges to `endTime`.\
+affixOldranges(endTime) =>\
+    if drawnGraphics.rows() > 0\
+        lastGraphics = drawnGraphics.row(drawnGraphics.rows() - 1)\
+\
+        for graphic in lastGraphics\
+            graphic.rangeLine.set_x2(endTime)\
+            if positionLabelsInput == "Right"\
+                graphic.rangeLabel.set_x(endTime)\
+\
+//@function Draws range lines and labels from `startTime` to the approximate end of the period.\
+drawNewranges(startTime) =>\
+    \
+    newGraphics = array.new<rangeGraphic>()\
+\
+    for [index, coord] in rangePointsArray\
+        levelSettings = graphicSettingsArray.get(index)\
+        levelStyle = switch lineStyle\
+            "Dotted" => line.style_dotted\
+            "Dashed" => line.style_dashed\
+            "Line"   => line.style_solid\
+\
+        if not na(coord) and levelSettings.showLevel\
+            lineEndTime = startTime + timeframe.in_seconds(rangeTimeframe) * 1000 * rangeYearMultiplier\
+            rangeLine = line.new(startTime, coord, lineEndTime, coord, xloc = xloc.bar_time, color=levelSettings.levelColor, width=linewidthInput, style=levelStyle)\
+            rangeLabel = label.new(x = positionLabelsInput == "Left" ? startTime : lineEndTime,\
+                               y = coord,\
+                               text = (showLabelsInput ? levelSettings.levelName + " " : "") + (showPricesInput ? "(" + str.tostring(coord, format.mintick) + ")" : ""),\
+                               style = positionLabelsInput == "Left" ? label.style_label_right : label.style_label_left,\
+                               textcolor = levelSettings.levelColor,\
+                               color = #00000000,\
+                               xloc=xloc.bar_time)\
+            \
+            newGraphics.push(rangeGraphic.new(rangeLine, rangeLabel))\
+    \
+    drawnGraphics.add_row(array_id = newGraphics)\
+\
+    if drawnGraphics.rows() > maxHistoricalRangeIn\
+        oldGraphics = drawnGraphics.remove_row(0)\
+        \
+        for graphic in oldGraphics\
+            graphic.delete()\
+\
+localrangeDrawConditionStatic = not isDailyBasedInput and localRangeTimeframeChange\
+securityrangeDrawConditionStatic = isDailyBasedInput and securityrangeCounter != securityrangeCounter[1]\
+\
+var isMultiYearly = array.from("Biyearly", "Triyearly", "Quinquennially", "Decennially").includes(rangeAnchorIn)\
+localrangeDrawConditionDeveloping = not isDailyBasedInput and time_close == time_close(rangeTimeframe) and not isMultiYearly \
+securityrangeDrawConditionDeveloping = false\
+\
+if (securityrangeDrawConditionStatic or localrangeDrawConditionStatic)\
+    affixOldranges(time)\
+    drawNewranges(time)\
+\
+// If possible, draw ranges from the beginning of the chart if none were found\
+var FIRST_BAR_TIME = time\
+if (barstate.islastconfirmedhistory and drawnGraphics.columns() == 0)\
+\
+    if not na(securityranges) and securityrangeCounter > 0\
+        if isDailyBasedInput\
+            drawNewranges(FIRST_BAR_TIME)\
+        else \
+            runtime.error("Not enough intraday data to calculate range Points. Lower the ranges Timeframe or turn on the 'Use Daily-based Values' option in the indicator settings.")\
+    else\
+        runtime.error("Not enough data to calculate range Points. Lower the ranges Timeframe in the indicator settings.")\
+2nd indicator :  //@version=6\
+indicator("Consolidated EMA RSI Vol ATR BB Strategy", overlay=true) // Updated name\
+\
+// === INPUTS ===\
+\
+// --- EMAs ---\
+grp1 = "EMA Settings"\
+emaFastLen = input.int(9, title="Fast EMA Length", minval=1, group=grp1)\
+emaMedLen = input.int(14, title="Medium EMA Length", minval=1, group=grp1)\
+emaSlowLen = input.int(21, title="Slow EMA Length", minval=1, group=grp1)\
+\
+// --- RSI ---\
+grp2 = "RSI Settings"\
+rsiLen = input.int(14, title="Price RSI Length", minval=1, group=grp2)\
+useRsiEntryFilter = input.bool(false, title="Use RSI Filter for Entry?", group=grp2)\
+rsiBuyEntry = input.float(50.0, title="RSI Buy Entry Threshold (>)", group=grp2)\
+rsiSellEntry = input.float(50.0, title="RSI Sell Entry Threshold (<)", group=grp2)\
+useRsiExit = input.bool(true, title="Use RSI for Exit?", group=grp2)\
+rsiExitLong = input.float(40.0, title="RSI Exit Long Threshold (<)", group=grp2)\
+rsiExitShort = input.float(60.0, title="RSI Exit Short Threshold (>)", group=grp2)\
+\
+// --- Volume ---\
+grp3 = "Volume Settings"\
+volMALen = input.int(50, title="Volume MA Length", minval=1, group=grp3)\
+useVolEntryFilter = input.bool(false, title="Use Volume Filter for Entry?", group=grp3)\
+useVolExit = input.bool(true, title="Use Volume for Exit?", group=grp3)\
+\
+// --- ATR Stop Loss ---\
+grp4 = "ATR Stop Loss Settings"\
+useAtrStop = input.bool(true, title="Use ATR Stop Loss for Exit?", group=grp4)\
+atrLen = input.int(14, title="ATR Length", minval=1, group=grp4)\
+atrMult = input.float(2.0, title="ATR Multiplier", minval=0.1, group=grp4)\
+\
+// --- Trend Confirmation ---\
+grp5 = "Trend Confirmation"\
+useTrendConfirmation = input.bool(false, title="Require EMA Trend Confirmation for Entry?", group=grp5)\
+\
+// --- Fibonacci Exit ---\
+grp6 = "Fibonacci Extension Exit"\
+useFibExit = input.bool(false, title="Use Fibonacci Extension Exit?", group=grp6)\
+fibLookback = input.int(30, title="Fib Swing Lookback Period", minval=5, group=grp6)\
+fibExtensionLevel = input.float(1.618, title="Fib Extension Target Multiplier", minval=0.1, group=grp6)\
+\
+// --- Bollinger Bands ---\
+grp7 = "Bollinger Bands Settings"\
+showBB = input.bool(true, title="Show Bollinger Bands?", group=grp7)\
+bbLen = input.int(20, title="BB Length", minval=1, group=grp7)\
+bbStdDev = input.float(2.0, title="BB StdDev Multiplier", minval=0.1, group=grp7)\
+bbColor = input.color(color.new(color.gray, 50), title="BB Color", group=grp7)\
+\
+\
+// === CALCULATIONS ===\
+\
+// --- Indicators ---\
+emaFast = ta.ema(close, emaFastLen)\
+emaMed = ta.ema(close, emaMedLen)\
+emaSlow = ta.ema(close, emaSlowLen)\
+priceRsi = ta.rsi(close, rsiLen)\
+volMA = ta.sma(volume, volMALen)\
+atrVal = ta.atr(atrLen)\
+\
+// Bollinger Bands Calculation\
+[bbMiddle, bbUpper, bbLower] = ta.bb(close, bbLen, bbStdDev)\
+\
+// --- Crossover/Crossunder Events (Calculated Globally) ---\
+fastSlow_Crossover = ta.crossover(emaFast, emaSlow)\
+fastSlow_Crossunder = ta.crossunder(emaFast, emaSlow)\
+fastMed_Crossover = ta.crossover(emaFast, emaMed)\
+fastMed_Crossunder = ta.crossunder(emaFast, emaMed)\
+\
+// --- Swing High/Low for Fib (Calculated Globally) ---\
+recentLowest = ta.lowest(low, fibLookback)[1]\
+recentHighest = ta.highest(high, fibLookback)[1]\
+\
+// --- Entry Conditions ---\
+baseBuySignal = fastSlow_Crossover\
+baseSellSignal = fastSlow_Crossunder\
+\
+// Filters\
+rsiFilterBuyCond = not useRsiEntryFilter or priceRsi > rsiBuyEntry\
+rsiFilterSellCond = not useRsiEntryFilter or priceRsi < rsiSellEntry\
+volFilterCond = not useVolEntryFilter or volume > volMA\
+trendConfirmBuyCond = not useTrendConfirmation or emaMed > emaSlow\
+trendConfirmSellCond = not useTrendConfirmation or emaMed < emaSlow\
+\
+// Combined Entry Signals\
+buySignal = baseBuySignal and rsiFilterBuyCond and volFilterCond and trendConfirmBuyCond\
+sellSignal = baseSellSignal and rsiFilterSellCond and volFilterCond and trendConfirmSellCond\
+\
+// --- State Tracking, Stop Loss & Fib Target ---\
+var bool inLong = false\
+var bool inShort = false\
+var float stopLossLevel = na\
+var float fibTargetLevel = na\
+var float entryPrice = na\
+\
+// Store previous state to detect new entries properly\
+var bool wasInLong = false\
+var bool wasInShort = false\
+wasInLong := inLong\
+wasInShort := inShort\
+\
+// Check for new entry signals\
+isNewBuy = buySignal and not wasInLong\
+isNewSell = sellSignal and not wasInShort\
+\
+// Update state and set initial stop/target levels on new entries\
+if (isNewBuy)\
+    inLong := true\
+    inShort := false\
+    entryPrice := close\
+    stopLossLevel := low - atrVal * atrMult\
+    swingLowPrice = recentLowest\
+    swingRange = entryPrice - swingLowPrice\
+    fibTargetLevel := swingRange > 0 ? entryPrice + swingRange * fibExtensionLevel : na\
+\
+if (isNewSell)\
+    inShort := true\
+    inLong := false\
+    entryPrice := close\
+    stopLossLevel := high + atrVal * atrMult\
+    swingHighPrice = recentHighest\
+    swingRange = swingHighPrice - entryPrice\
+    fibTargetLevel := swingRange > 0 ? entryPrice - swingRange * fibExtensionLevel : na\
+\
+// Update SL on subsequent bars if enabled and in trade (Trailing Stop)\
+if (useAtrStop and inLong and not isNewBuy)\
+    newStopLong = low - atrVal * atrMult\
+    stopLossLevel := math.max(stopLossLevel, newStopLong)\
+\
+if (useAtrStop and inShort and not isNewSell)\
+    newStopShort = high + atrVal * atrMult\
+    stopLossLevel := math.min(stopLossLevel, newStopShort)\
+\
+\
+// --- Exit Conditions ---\
+// Opposite Crossover Exit\
+exitLong_Cross = inLong and fastMed_Crossunder\
+exitShort_Cross = inShort and fastMed_Crossover\
+\
+// ATR Stop Loss Exit (Store boolean separately)\
+atrStopHitLong = useAtrStop and inLong and close < stopLossLevel\
+atrStopHitShort = useAtrStop and inShort and close > stopLossLevel\
+\
+// RSI Exit\
+exitLong_RSI = useRsiExit and inLong and priceRsi < rsiExitLong\
+exitShort_RSI = useRsiExit and inShort and priceRsi > rsiExitShort\
+\
+// Volume Exit\
+exitLong_Vol = useVolExit and inLong and close < emaFast and volume < volMA\
+exitShort_Vol = useVolExit and inShort and close > emaFast and volume < volMA\
+\
+// Fibonacci Exit\
+exitLong_Fib = useFibExit and inLong and not na(fibTargetLevel) and high >= fibTargetLevel\
+exitShort_Fib = useFibExit and inShort and not na(fibTargetLevel) and low <= fibTargetLevel\
+\
+// Combined Exit Signals (Check ATR boolean here)\
+exitLongSignal = exitLong_Cross or atrStopHitLong or exitLong_RSI or exitLong_Vol or exitLong_Fib\
+exitShortSignal = exitShort_Cross or atrStopHitShort or exitShort_RSI or exitShort_Vol or exitShort_Fib\
+\
+// Determine if an exit occurred on the current bar AND whether it was an ATR stop\
+exitedLongThisBar = wasInLong and exitLongSignal // Use wasInLong to catch exit on the bar it happens\
+exitedShortThisBar = wasInShort and exitShortSignal // Use wasInShort\
+\
+atrStopExitLong = wasInLong and atrStopHitLong // Check if the ATR stop was the trigger *before* state reset\
+atrStopExitShort = wasInShort and atrStopHitShort // Check if the ATR stop was the trigger *before* state reset\
+\
+// --- Reset State on Exit ---\
+if (exitedLongThisBar)\
+    inLong := false\
+    stopLossLevel := na\
+    fibTargetLevel := na\
+    entryPrice := na\
+\
+if (exitedShortThisBar)\
+    inShort := false\
+    stopLossLevel := na\
+    fibTargetLevel := na\
+    entryPrice := na\
+\
+// Handling potential state flips within the same bar (simplified)\
+// Re-entry logic might need more sophistication if needed on the *exact* exit bar\
+\
+\
+// === PLOTTING ===\
+\
+// Plot EMAs\
+plot(emaFast, color=color.new(color.blue, 0), title="Fast EMA")\
+plot(emaMed, color=color.new(color.orange, 0), title="Medium EMA")\
+plot(emaSlow, color=color.new(color.red, 0), title="Slow EMA")\
+\
+// Plot Bollinger Bands\
+bbMidPlot = plot(showBB ? bbMiddle : na, title="BB Middle", color=bbColor, linewidth=1)\
+bbUpperPlot = plot(showBB ? bbUpper : na, title="BB Upper", color=bbColor, linewidth=1)\
+bbLowerPlot = plot(showBB ? bbLower : na, title="BB Lower", color=bbColor, linewidth=1)\
+fill(bbUpperPlot, bbLowerPlot, color=color.new(bbColor, 90), title="BB Fill")\
+\
+// Plot Entry Arrows\
+plotshape(isNewBuy, title="Buy Signal", location=location.belowbar, color=color.green, style=shape.triangleup, size=size.small)\
+plotshape(isNewSell, title="Sell Signal", location=location.abovebar, color=color.red, style=shape.triangledown, size=size.small)\
+\
+// --- MODIFIED EXIT PLOTTING with TEXT for SL ---\
+// Plot NORMAL Long Exit (Cross, Blue) - Only if exit occurred AND it was NOT an ATR stop\
+plotshape(exitedLongThisBar and not atrStopExitLong, // Condition\
+     title="Exit Long (Normal)",\
+     location=location.abovebar,\
+     color=color.new(color.blue, 0),\
+     style=shape.cross, // Fixed style\
+     size=size.small)\
+\
+// Plot ATR STOP Long Exit (Text "SL", Red Background) - Only if exit occurred AND it WAS an ATR stop\
+plotshape(exitedLongThisBar and atrStopExitLong, // Condition\
+     title="Exit Long (ATR Stop)",\
+     text="SL", // Display "SL"\
+     textcolor=color.new(color.white, 0), // White text\
+     location=location.abovebar,\
+     color=color.new(color.red, 0), // Red background for label\
+     style=shape.labeldown, // Label style points down\
+     size=size.small) // Text size\
+\
+\
+// Plot NORMAL Short Exit (Cross, Orange) - Only if exit occurred AND it was NOT an ATR stop\
+plotshape(exitedShortThisBar and not atrStopExitShort, // Condition\
+     title="Exit Short (Normal)",\
+     location=location.belowbar,\
+     color=color.new(color.orange, 0),\
+     style=shape.cross, // Fixed style\
+     size=size.small)\
+\
+// Plot ATR STOP Short Exit (Text "SL", Lime Background) - Only if exit occurred AND it WAS an ATR stop\
+plotshape(exitedShortThisBar and atrStopExitShort, // Condition\
+     title="Exit Short (ATR Stop)",\
+     text="SL", // Display "SL"\
+     textcolor=color.new(color.black, 0), // Black text\
+     location=location.belowbar,\
+     color=color.new(color.lime, 0), // Lime background for label\
+     style=shape.labelup, // Label style points up\
+     size=size.small) // Text size\
+// --- END OF MODIFICATION ---\
+\
+\
+// Plot Stop Loss Level\
+plot(inLong and useAtrStop ? stopLossLevel : na, title="Long Stop Loss", color=color.new(color.maroon, 0), style=plot.style_linebr, linewidth=1)\
+plot(inShort and useAtrStop ? stopLossLevel : na, title="Short Stop Loss", color=color.new(color.teal, 0), style=plot.style_linebr, linewidth=1)\
+\
+// Plot Fibonacci Target Level\
+plot(inLong and useFibExit ? fibTargetLevel : na, title="Long Fib Target", color=color.new(color.fuchsia, 0), style=plot.style_linebr, linewidth=1)\
+plot(inShort and useFibExit ? fibTargetLevel : na, title="Short Fib Target", color=color.new(color.fuchsia, 0), style=plot.style_linebr, linewidth=1)\
+\
+// Optional: Background color for trade state\
+bgcolor(inLong ? color.new(color.green, 90) : inShort ? color.new(color.red, 90) : na) 3rd indicator : //@version=6\
+indicator(title="Multi-Signal Indicator [v6]", overlay=true)\
+\
+// === INPUTS ===\
+// [Inputs remain the same - use input.* functions]\
+// --- Entry System ---\
+grpEntry = "Entry System"\
+entrySystem = input.string("EMA Crossover", title="Entry System Type", options=["EMA Crossover", "BB Breakout", "BB Reversion"], group=grpEntry)\
+// --- EMAs Signals ---\
+grpEMA = "EMA Signals"\
+emaFastLen = input.int(9, title="Fast EMA Length", minval=1, group=grpEMA)\
+emaMedLen = input.int(14, title="Medium EMA Length", minval=1, group=grpEMA)\
+emaSlowLen = input.int(21, title="Slow EMA Length", minval=1, group=grpEMA)\
+emaEnableCrossBuy = input.bool(true, title="Enable EMA Fast/Slow Cross Buy", group=grpEMA)\
+emaEnableCrossSell = input.bool(true, title="Enable EMA Fast/Slow Cross Sell", group=grpEMA)\
+emaEnableMedCrossExit = input.bool(true, title="Enable EMA Fast/Med Cross Exit", group=grpEMA)\
+// --- Bollinger Bands Signals ---\
+grpBB = "Bollinger Bands Signals"\
+showBB = input.bool(true, title="Show Bollinger Bands?", group=grpBB)\
+bbLen = input.int(20, title="BB Length", minval=1, group=grpBB)\
+bbStdDev = input.float(2.0, title="BB StdDev Multiplier", minval=0.1, group=grpBB)\
+bbColor = input.color(color.new(color.gray, 50), title="BB Color", group=grpBB)\
+bbEnableBreakoutBuy = input.bool(false, title="Enable BB Breakout Buy (Close > Upper)", group=grpBB)\
+bbEnableBreakoutSell = input.bool(false, title="Enable BB Breakout Sell (Close < Lower)", group=grpBB)\
+bbEnableReversionBuy = input.bool(false, title="Enable BB Reversion Buy (Close crosses back > Lower)", group=grpBB)\
+bbEnableReversionSell = input.bool(false, title="Enable BB Reversion Sell (Close crosses back < Upper)", group=grpBB)\
+bbEnableExitMeanRevert = input.bool(false, title="Enable BB Exit: Mean Reversion (Close > Upper / < Lower)?", group=grpBB)\
+bbEnableExitReturnToMean = input.bool(true, title="Enable BB Exit: Return to Mean (Cross Middle Band)?", group=grpBB)\
+bbEnableExitOppositeBand = input.bool(false, title="Enable BB Exit: Touch Opposite Band?", group=grpBB)\
+// --- RSI Signals ---\
+grpRSI = "RSI Signals"\
+rsiLen = input.int(14, title="RSI Length", minval=1, group=grpRSI)\
+rsiBuyLevel = input.float(55.0, title="RSI Buy Threshold (>)", group=grpRSI)\
+rsiSellLevel = input.float(45.0, title="RSI Sell Threshold (<)", group=grpRSI)\
+rsiOBLevel = input.float(70.0, title="RSI Overbought Level", group=grpRSI)\
+rsiOSLevel = input.float(30.0, title="RSI Oversold Level", group=grpRSI)\
+rsiEnableThresholdBuy = input.bool(false, title="Enable RSI Cross Buy Threshold Signal (>)", group=grpRSI)\
+rsiEnableThresholdSell = input.bool(false, title="Enable RSI Cross Sell Threshold Signal (<)", group=grpRSI)\
+rsiEnableOBExit = input.bool(false, title="Enable RSI Exit on Overbought Cross (< OB)", group=grpRSI)\
+rsiEnableOSExit = input.bool(false, title="Enable RSI Exit on Oversold Cross (> OS)", group=grpRSI)\
+// --- MACD Signals ---\
+grpMACD = "MACD Signals"\
+macdFastLen = input.int(12, title="MACD Fast Length", group=grpMACD)\
+macdSlowLen = input.int(26, title="MACD Slow Length", group=grpMACD)\
+macdSignalLen = input.int(9, title="MACD Signal Length", group=grpMACD)\
+macdEnableSignalCrossBuy = input.bool(false, title="Enable MACD Signal Line Cross Buy", group=grpMACD)\
+macdEnableSignalCrossSell = input.bool(false, title="Enable MACD Signal Line Cross Sell", group=grpMACD)\
+macdEnableZeroCrossBuy = input.bool(false, title="Enable MACD Zero Line Cross Buy", group=grpMACD)\
+macdEnableZeroCrossSell = input.bool(false, title="Enable MACD Zero Line Cross Sell", group=grpMACD)\
+// --- Volume Signals ---\
+grpVol = "Volume Signals"\
+volMALen = input.int(50, title="Volume MA Length", minval=1, group=grpVol)\
+volEnableBreakoutBuy = input.bool(false, title="Enable High Volume Breakout Buy", group=grpVol)\
+volEnableBreakoutSell = input.bool(false, title="Enable High Volume Breakout Sell", group=grpVol)\
+volEnableLowVolExit = input.bool(true, title="Enable Low Volume Pullback Exit", group=grpVol)\
+// --- ATR Stop Loss ---\
+grpATR = "ATR Stop Loss"\
+useAtrStop = input.bool(true, title="Use ATR Stop Loss for Exit?", group=grpATR)\
+atrLen = input.int(14, title="ATR Length", minval=1, group=grpATR)\
+atrMult = input.float(2.0, title="ATR Multiplier", minval=0.1, group=grpATR)\
+// --- Fibonacci Exit ---\
+grpFib = "Fibonacci Exit Target"\
+useFibExit = input.bool(false, title="Use Fibonacci Extension Exit Target?", group=grpFib)\
+fibLookback = input.int(30, title="Fib Swing Lookback Period", minval=5, group=grpFib)\
+fibExtensionLevel = input.float(1.618, title="Fib Extension Target Multiplier", minval=0.1, group=grpFib)\
+// --- Trend / Filter Options ---\
+grpFilter = "General Filters (Apply to Enabled Entries)"\
+useTrendConfirmation = input.bool(false, title="Require EMA Trend Confirmation (Med/Slow)?", group=grpFilter)\
+useAdxFilter = input.bool(false, title="Use ADX Filter?", group=grpFilter)\
+adxLen = input.int(14, title="ADX Length", minval=1, group=grpFilter)\
+adxThreshold = input.float(20.0, title="ADX Threshold (>)", minval=0, group=grpFilter)\
+\
+\
+// === CALCULATIONS ===\
+\
+// --- Indicators ---\
+emaFast = ta.ema(close, emaFastLen)\
+emaMed = ta.ema(close, emaMedLen)\
+emaSlow = ta.ema(close, emaSlowLen)\
+[bbMiddle, bbUpper, bbLower] = ta.bb(close, bbLen, bbStdDev)\
+priceRsi = ta.rsi(close, rsiLen)\
+[macdLine, signalLine, histLine] = ta.macd(close, macdFastLen, macdSlowLen, macdSignalLen)\
+volMA = ta.sma(volume, volMALen)\
+atrVal = ta.atr(atrLen)\
+[diPos, diNeg, adxVal] = ta.dmi(adxLen, adxLen)\
+\
+// --- Swing High/Low for Fib (Calculated Globally) --- // MOVED HERE\
+globalRecentLowest = ta.lowest(low, fibLookback)[1]\
+globalRecentHighest = ta.highest(high, fibLookback)[1]\
+\
+// --- Calculate ALL Individual Signal Conditions ---\
+// EMA\
+cond_emaCrossBuy = ta.crossover(emaFast, emaSlow)\
+cond_emaCrossSell = ta.crossunder(emaFast, emaSlow)\
+cond_emaMedCrossExitLong = ta.crossunder(emaFast, emaMed)\
+cond_emaMedCrossExitShort = ta.crossover(emaFast, emaMed)\
+// BB\
+cond_bbBreakoutBuy = ta.crossover(close, bbUpper)\
+cond_bbBreakoutSell = ta.crossunder(close, bbLower)\
+cond_bbReversionBuy = ta.crossover(close, bbLower)\
+cond_bbReversionSell = ta.crossunder(close, bbUpper)\
+cond_bbExitMeanRevertLong = close > bbUpper\
+cond_bbExitMeanRevertShort = close < bbLower\
+cond_bbExitReturnMeanLong = ta.crossunder(close, bbMiddle)\
+cond_bbExitReturnMeanShort = ta.crossover(close, bbMiddle)\
+cond_bbExitOppositeLong = low <= bbLower\
+cond_bbExitOppositeShort = high >= bbUpper\
+// RSI\
+cond_rsiCrossBuyLevel = ta.crossover(priceRsi, rsiBuyLevel)\
+cond_rsiCrossSellLevel = ta.crossunder(priceRsi, rsiSellLevel)\
+cond_rsiExitOB = ta.crossunder(priceRsi, rsiOBLevel)\
+cond_rsiExitOS = ta.crossover(priceRsi, rsiOSLevel)\
+// MACD\
+cond_macdSignalCrossBuy = ta.crossover(macdLine, signalLine)\
+cond_macdSignalCrossSell = ta.crossunder(macdLine, signalLine) // Use ta.under instead of crossunder for MACD sell\
+cond_macdZeroCrossBuy = ta.crossover(macdLine, 0)\
+cond_macdZeroCrossSell = ta.crossunder(macdLine, 0) // Use ta.under instead of crossunder for MACD sell\
+// Volume\
+highVol = volume > volMA * 1.5\
+isStrongUpCandle = close > open and close > close[1]\
+isStrongDownCandle = close < open and close < close[1]\
+cond_volBreakoutBuy = highVol and isStrongUpCandle\
+cond_volBreakoutSell = highVol and isStrongDownCandle\
+cond_volLowVolExitLong = close < emaFast and volume < volMA\
+cond_volLowVolExitShort = close > emaFast and volume < volMA\
+\
+// --- State Tracking ---\
+var bool inLong = false\
+var bool inShort = false\
+var float stopLossLevel = na\
+var float fibTargetLevel = na\
+var float entryPrice = na\
+var bool wasInLong = false\
+var bool wasInShort = false\
+wasInLong := inLong\
+wasInShort := inShort\
+\
+// --- Determine Entry ---\
+anyBuySignal = (emaEnableCrossBuy and cond_emaCrossBuy) or (bbEnableBreakoutBuy and cond_bbBreakoutBuy) or (bbEnableReversionBuy and cond_bbReversionBuy) or (rsiEnableThresholdBuy and cond_rsiCrossBuyLevel) or (macdEnableSignalCrossBuy and cond_macdSignalCrossBuy) or (macdEnableZeroCrossBuy and cond_macdZeroCrossBuy) or (volEnableBreakoutBuy and cond_volBreakoutBuy)\
+anySellSignal = (emaEnableCrossSell and cond_emaCrossSell) or (bbEnableBreakoutSell and cond_bbBreakoutSell) or (bbEnableReversionSell and cond_bbReversionSell) or (rsiEnableThresholdSell and cond_rsiCrossSellLevel) or (macdEnableSignalCrossSell and cond_macdSignalCrossSell) or (macdEnableZeroCrossSell and cond_macdZeroCrossSell) or (volEnableBreakoutSell and cond_volBreakoutSell)\
+\
+trendFilterOkBuy = not useTrendConfirmation or emaMed > emaSlow\
+trendFilterOkSell = not useTrendConfirmation or emaMed < emaSlow\
+adxFilterOk = not useAdxFilter or adxVal > adxThreshold\
+\
+filteredBuySignal = anyBuySignal and trendFilterOkBuy and adxFilterOk\
+filteredSellSignal = anySellSignal and trendFilterOkSell and adxFilterOk\
+\
+isNewBuy = filteredBuySignal and not wasInLong\
+isNewSell = filteredSellSignal and not wasInShort\
+\
+// Determine Buy/Sell Reason Text // CORRECTED v6 Syntax using direct if/else expression\
+buyReason = if isNewBuy\
+    emaEnableCrossBuy and cond_emaCrossBuy ? "EMA Buy" :bbEnableBreakoutBuy and cond_bbBreakoutBuy ? "BB B/O Buy" :bbEnableReversionBuy and cond_bbReversionBuy ? "BB Rev Buy" :rsiEnableThresholdBuy and cond_rsiCrossBuyLevel ? "RSI Buy" :macdEnableSignalCrossBuy and cond_macdSignalCrossBuy ? "MACD Buy" :macdEnableZeroCrossBuy and cond_macdZeroCrossBuy ? "MACD 0 Buy" :volEnableBreakoutBuy and cond_volBreakoutBuy ? "Vol Buy" :"Buy"\
+else\
+    ""\
+\
+sellReason = if isNewSell\
+    emaEnableCrossSell and cond_emaCrossSell ? "EMA Sell" :bbEnableBreakoutSell and cond_bbBreakoutSell ? "BB B/O Sell" :bbEnableReversionSell and cond_bbReversionSell ? "BB Rev Sell" :rsiEnableThresholdSell and cond_rsiCrossSellLevel ? "RSI Sell" :macdEnableSignalCrossSell and cond_macdSignalCrossSell ? "MACD Sell" :macdEnableZeroCrossSell and cond_macdZeroCrossSell ? "MACD 0 Sell" :volEnableBreakoutSell and cond_volBreakoutSell ? "Vol Sell" :"Sell"\
+else\
+    ""\
+\
+// Update State, SL, Target\
+if (isNewBuy)\
+    inLong := true\
+    inShort := false\
+    entryPrice := close\
+    stopLossLevel := low - atrVal * atrMult\
+    // Use globally calculated swing low\
+    swingRangeFib = entryPrice - globalRecentLowest\
+    fibTargetLevel := swingRangeFib > 0 and useFibExit ? entryPrice + swingRangeFib * fibExtensionLevel : na\
+\
+if (isNewSell)\
+    inShort := true\
+    inLong := false\
+    entryPrice := close\
+    stopLossLevel := high + atrVal * atrMult\
+    // Use globally calculated swing high\
+    swingRangeFib = globalRecentHighest - entryPrice\
+    fibTargetLevel := swingRangeFib > 0 and useFibExit ? entryPrice - swingRangeFib * fibExtensionLevel : na\
+\
+// Update SL\
+if (useAtrStop and inLong and not isNewBuy)\
+    newStopLong = low - atrVal * atrMult\
+    stopLossLevel := math.max(stopLossLevel, newStopLong)\
+if (useAtrStop and inShort and not isNewSell)\
+    newStopShort = high + atrVal * atrMult\
+    stopLossLevel := math.min(stopLossLevel, newStopShort)\
+\
+// --- Determine Exit ---\
+atrStopHitLong = useAtrStop and inLong and close < stopLossLevel\
+atrStopHitShort = useAtrStop and inShort and close > stopLossLevel\
+fibHitLong = useFibExit and inLong and not na(fibTargetLevel) and high >= fibTargetLevel\
+fibHitShort = useFibExit and inShort and not na(fibTargetLevel) and low <= fibTargetLevel\
+bbMeanRevertExitLongCond = bbEnableExitMeanRevert and inLong and cond_bbExitMeanRevertLong\
+bbMeanRevertExitShortCond = bbEnableExitMeanRevert and inShort and cond_bbExitMeanRevertShort\
+bbReturnExitLongCond = bbEnableExitReturnToMean and inLong and cond_bbExitReturnMeanLong\
+bbReturnExitShortCond = bbEnableExitReturnToMean and inShort and cond_bbExitReturnMeanShort\
+bbOppositeExitLongCond = bbEnableExitOppositeBand and inLong and cond_bbExitOppositeLong\
+bbOppositeExitShortCond = bbEnableExitOppositeBand and inShort and cond_bbExitOppositeShort\
+rsiExitLongCond = rsiEnableOBExit and inLong and cond_rsiExitOB\
+rsiExitShortCond = rsiEnableOSExit and inShort and cond_rsiExitOS\
+volExitLongCond = volEnableLowVolExit and inLong and cond_volLowVolExitLong\
+volExitShortCond = volEnableLowVolExit and inShort and cond_volLowVolExitShort\
+emaCrossExitLongCond = emaEnableMedCrossExit and inLong and cond_emaMedCrossExitLong\
+emaCrossExitShortCond = emaEnableMedCrossExit and inShort and cond_emaMedCrossExitShort\
+\
+anyLongExit = atrStopHitLong or fibHitLong or bbMeanRevertExitLongCond or bbOppositeExitLongCond or bbReturnExitLongCond or rsiExitLongCond or volExitLongCond or emaCrossExitLongCond\
+anyShortExit = atrStopHitShort or fibHitShort or bbMeanRevertExitShortCond or bbOppositeExitShortCond or bbReturnExitShortCond or rsiExitShortCond or volExitShortCond or emaCrossExitShortCond\
+\
+exitedLongThisBar = wasInLong and anyLongExit\
+exitedShortThisBar = wasInShort and anyShortExit\
+\
+// Determine Exit Reason Text // CORRECTED v6 Syntax using direct if/else expression\
+longExitReason = if exitedLongThisBar\
+    atrStopHitLong ? "ATR SL" :fibHitLong ? "Fib Tgt" :bbMeanRevertExitLongCond ? "BB MR" :bbOppositeExitLongCond ? "BB Oppo" :bbReturnExitLongCond ? "BB Mid" :rsiExitLongCond ? "RSI OB" :volExitLongCond ? "Volume" :emaCrossExitLongCond ? "EMA Cross" :"Exit"\
+else\
+    ""\
+\
+shortExitReason = if exitedShortThisBar\
+    atrStopHitShort ? "ATR SL" :fibHitShort ? "Fib Tgt" :bbMeanRevertExitShortCond ? "BB MR" :bbOppositeExitShortCond ? "BB Oppo" :bbReturnExitShortCond ? "BB Mid" :rsiExitShortCond ? "RSI OS" :volExitShortCond ? "Volume" :emaCrossExitShortCond ? "EMA Cross" :"Exit"\
+else\
+    ""\
+\
+// Specific check for ATR SL alerts\
+atrStopFiredLong = wasInLong and atrStopHitLong\
+atrStopFiredShort = wasInShort and atrStopHitShort\
+\
+// --- Reset State on Exit ---\
+if (exitedLongThisBar)\
+    inLong := false\
+    stopLossLevel := na\
+    fibTargetLevel := na\
+    entryPrice := na\
+\
+if (exitedShortThisBar)\
+    inShort := false\
+    stopLossLevel := na\
+    fibTargetLevel := na\
+    entryPrice := na\
+\
+// === PLOTTING ===\
+// Plot Indicators\
+plot(emaFast, color=color.new(color.blue, 0), title="Fast EMA")\
+plot(emaMed, color=color.new(color.orange, 0), title="Medium EMA")\
+plot(emaSlow, color=color.new(color.red, 0), title="Slow EMA")\
+bbMidPlot = plot(showBB ? bbMiddle : na, title="BB Middle", color=bbColor, linewidth=1)\
+bbUpperPlot = plot(showBB ? bbUpper : na, title="BB Upper", color=bbColor, linewidth=1)\
+bbLowerPlot = plot(showBB ? bbLower : na, title="BB Lower", color=bbColor, linewidth=1)\
+fill(bbUpperPlot, bbLowerPlot, color=color.new(bbColor, 90), title="BB Fill")\
+// Plot SL and Target Lines\
+plot(inLong and useAtrStop ? stopLossLevel : na, title="Long Stop Loss", color=color.new(color.maroon, 0), style=plot.style_linebr, linewidth=1)\
+plot(inShort and useAtrStop ? stopLossLevel : na, title="Short Stop Loss", color=color.new(color.teal, 0), style=plot.style_linebr, linewidth=1)\
+plot(inLong and useFibExit ? fibTargetLevel : na, title="Long Fib Target", color=color.new(color.fuchsia, 0), style=plot.style_linebr, linewidth=1)\
+plot(inShort and useFibExit ? fibTargetLevel : na, title="Short Fib Target", color=color.new(color.fuchsia, 0), style=plot.style_linebr, linewidth=1)\
+\
+// UNIFIED SIGNAL LABELS using label.new()\
+if isNewBuy\
+    label.new(bar_index, low, text=buyReason, yloc=yloc.belowbar, color=color.new(color.green, 0), textcolor=color.new(color.white, 0), style=label.style_label_up, size=size.small)\
+if isNewSell\
+    label.new(bar_index, high, text=sellReason, yloc=yloc.abovebar, color=color.new(color.red, 0), textcolor=color.new(color.white, 0), style=label.style_label_down, size=size.small)\
+if exitedLongThisBar\
+    label.new(bar_index, high, text=longExitReason, yloc=yloc.abovebar, color=color.new(color.maroon, 0), textcolor=color.new(color.white, 0), style=label.style_label_down, size=size.small)\
+if exitedShortThisBar\
+    label.new(bar_index, low, text=shortExitReason, yloc=yloc.belowbar, color=color.new(color.teal, 0), textcolor=color.new(color.white, 0), style=label.style_label_up, size=size.small)\
+\
+// Background color\
+bgcolor(inLong ? color.new(color.green, 90) : inShort ? color.new(color.red, 90) : na)\
+\
+// === ALERTS === (Simplified - Generic Trigger)\
+alertcondition(isNewBuy, title="New Buy Signal", message="\{\{exchange\}\}:\{\{ticker\}\} - Potential Buy Signal at \{\{close\}\}")\
+alertcondition(isNewSell, title="New Sell Signal", message="\{\{exchange\}\}:\{\{ticker\}\} - Potential Sell Signal at \{\{close\}\}")\
+alertcondition(exitedLongThisBar and not atrStopFiredLong, title="Exit Long Signal (Normal)", message="\{\{exchange\}\}:\{\{ticker\}\} - Exit Long at \{\{close\}\}")\
+alertcondition(exitedShortThisBar and not atrStopFiredShort, title="Exit Short Signal (Normal)", message="\{\{exchange\}\}:\{\{ticker\}\} - Exit Short at \{\{close\}\}")\
+alertcondition(atrStopFiredLong, title="ATR Stop Hit (Long)", message="\{\{exchange\}\}:\{\{ticker\}\} - ATR Stop Loss Hit (Long) at \{\{close\}\}")\
+alertcondition(atrStopFiredShort, title="ATR Stop Hit (Short)", message="\{\{exchange\}\}:\{\{ticker\}\} - ATR Stop Loss Hit (Short) at \{\{close\}\}")//@version=6\
+indicator("Advanced EMA/BB Strategy [Unified Labels]", overlay=true)\
+\
+\
+// === INPUTS ===\
+// [Inputs remain the same - omitted for brevity]\
+// --- Entry System ---\
+grpEntry = "Entry System"\
+entrySystem = input.string("EMA Crossover", title="Entry System Type", options=["EMA Crossover", "BB Breakout"], group=grpEntry)\
+// --- EMAs ---\
+grp1 = "EMA Settings"\
+emaFastLen = input.int(9, title="Fast EMA Length", minval=1, group=grp1)\
+emaMedLen = input.int(14, title="Medium EMA Length", minval=1, group=grp1)\
+emaSlowLen = input.int(21, title="Slow EMA Length", minval=1, group=grp1)\
+// --- Bollinger Bands ---\
+grp7 = "Bollinger Bands Settings"\
+showBB = input.bool(true, title="Show Bollinger Bands?", group=grp7)\
+bbLen = input.int(20, title="BB Length", minval=1, group=grp7)\
+bbStdDev = input.float(2.0, title="BB StdDev Multiplier", minval=0.1, group=grp7)\
+bbColor = input.color(color.new(color.gray, 50), title="BB Color", group=grp7)\
+useBBExitMeanRevert = input.bool(false, title="Use BB Exit: Mean Reversion (Close > Upper / < Lower)?", group=grp7)\
+useBBExitReturnToMean = input.bool(true, title="Use BB Exit: Return to Mean (Cross Middle Band)?", group=grp7)\
+useBBExitOppositeBand = input.bool(false, title="Use BB Exit: Touch Opposite Band?", group=grp7)\
+// --- RSI ---\
+grp2 = "RSI Settings"\
+rsiLen = input.int(14, title="Price RSI Length", minval=1, group=grp2)\
+useRsiEntryFilter = input.bool(false, title="Use RSI Filter for Entry?", group=grp2)\
+rsiBuyEntry = input.float(50.0, title="RSI Buy Entry Threshold (>)", group=grp2)\
+rsiSellEntry = input.float(50.0, title="RSI Sell Entry Threshold (<)", group=grp2)\
+useRsiExit = input.bool(true, title="Use RSI for Exit?", group=grp2)\
+rsiExitLong = input.float(40.0, title="RSI Exit Long Threshold (<)", group=grp2)\
+rsiExitShort = input.float(60.0, title="RSI Exit Short Threshold (>)", group=grp2)\
+// --- Volume ---\
+grp3 = "Volume Settings"\
+volMALen = input.int(50, title="Volume MA Length", minval=1, group=grp3)\
+useVolEntryFilter = input.bool(false, title="Use Volume Filter for Entry?", group=grp3)\
+useVolExit = input.bool(true, title="Use Volume for Exit?", group=grp3)\
+// --- ADX Filter ---\
+grp8 = "ADX Trend Filter"\
+useAdxFilter = input.bool(false, title="Use ADX Filter for Entry?", group=grp8)\
+adxLen = input.int(14, title="ADX Length", minval=1, group=grp8)\
+adxThreshold = input.float(20.0, title="ADX Entry Threshold (>)", minval=0, group=grp8)\
+// --- ATR Stop Loss ---\
+grp4 = "ATR Stop Loss Settings"\
+useAtrStop = input.bool(true, title="Use ATR Stop Loss for Exit?", group=grp4)\
+atrLen = input.int(14, title="ATR Length", minval=1, group=grp4)\
+atrMult = input.float(2.0, title="ATR Multiplier", minval=0.1, group=grp4)\
+// --- Trend Confirmation ---\
+grp5 = "Trend Confirmation (EMA)"\
+useTrendConfirmation = input.bool(false, title="Require EMA Trend Confirmation for Entry?", group=grp5)\
+// --- Fibonacci Exit ---\
+grp6 = "Fibonacci Extension Exit"\
+useFibExit = input.bool(false, title="Use Fibonacci Extension Exit?", group=grp6)\
+fibLookback = input.int(30, title="Fib Swing Lookback Period", minval=5, group=grp6)\
+fibExtensionLevel = input.float(1.618, title="Fib Extension Target Multiplier", minval=0.1, group=grp6)\
+\
+\
+// === CALCULATIONS ===\
+\
+// --- Indicators ---\
+emaFast = ta.ema(close, emaFastLen)\
+emaMed = ta.ema(close, emaMedLen)\
+emaSlow = ta.ema(close, emaSlowLen)\
+priceRsi = ta.rsi(close, rsiLen)\
+volMA = ta.sma(volume, volMALen)\
+atrVal = ta.atr(atrLen)\
+[bbMiddle, bbUpper, bbLower] = ta.bb(close, bbLen, bbStdDev)\
+[diPos, diNeg, adxVal] = ta.dmi(adxLen, adxLen)\
+\
+// --- Crossover/Crossunder Events ---\
+fastSlow_Crossover = ta.crossover(emaFast, emaSlow)\
+fastSlow_Crossunder = ta.crossunder(emaFast, emaSlow)\
+fastMed_Crossover = ta.crossover(emaFast, emaMed)\
+fastMed_Crossunder = ta.crossunder(emaFast, emaMed)\
+bbBreakoutBuy = ta.crossover(close, bbUpper)\
+bbBreakoutSell = ta.crossunder(close, bbLower)\
+bbReturnBuy = ta.crossover(close, bbMiddle)\
+bbReturnSell = ta.crossunder(close, bbMiddle)\
+\
+// --- Swing High/Low for Fib ---\
+recentLowest = ta.lowest(low, fibLookback)[1]\
+recentHighest = ta.highest(high, fibLookback)[1]\
+\
+// --- Determine Base Signal ---\
+baseBuySignal = entrySystem == "EMA Crossover" ? fastSlow_Crossover : entrySystem == "BB Breakout" ? bbBreakoutBuy : false\
+baseSellSignal = entrySystem == "EMA Crossover" ? fastSlow_Crossunder : entrySystem == "BB Breakout" ? bbBreakoutSell : false\
+\
+// --- Entry Filters ---\
+rsiFilterBuyCond = not useRsiEntryFilter or priceRsi > rsiBuyEntry\
+rsiFilterSellCond = not useRsiEntryFilter or priceRsi < rsiSellEntry\
+volFilterCond = not useVolEntryFilter or volume > volMA\
+trendConfirmBuyCond = not useTrendConfirmation or emaMed > emaSlow\
+trendConfirmSellCond = not useTrendConfirmation or emaMed < emaSlow\
+adxFilterCond = not useAdxFilter or adxVal > adxThreshold\
+\
+// --- Combined Entry Signals ---\
+buySignal = baseBuySignal and rsiFilterBuyCond and volFilterCond and trendConfirmBuyCond and adxFilterCond\
+sellSignal = baseSellSignal and rsiFilterSellCond and volFilterCond and trendConfirmSellCond and adxFilterCond\
+\
+// Determine Entry Reason Text (Used for labels only now)\
+buyEntryReason = entrySystem == "EMA Crossover" ? "EMA Buy" : entrySystem == "BB Breakout" ? "BB Buy" : "Buy"\
+sellEntryReason = entrySystem == "EMA Crossover" ? "EMA Sell" : entrySystem == "BB Breakout" ? "BB Sell" : "Sell"\
+\
+// --- State Tracking, Stop Loss & Fib Target ---\
+var bool inLong = false\
+var bool inShort = false\
+var float stopLossLevel = na\
+var float fibTargetLevel = na\
+var float entryPrice = na\
+\
+var bool wasInLong = false\
+var bool wasInShort = false\
+wasInLong := inLong\
+wasInShort := inShort\
+\
+isNewBuy = buySignal and not wasInLong\
+isNewSell = sellSignal and not wasInShort\
+\
+if (isNewBuy)\
+    inLong := true\
+    inShort := false\
+    entryPrice := close\
+    stopLossLevel := low - atrVal * atrMult\
+    swingLowPrice = recentLowest\
+    swingRange = entryPrice - swingLowPrice\
+    fibTargetLevel := swingRange > 0 and useFibExit ? entryPrice + swingRange * fibExtensionLevel : na\
+\
+if (isNewSell)\
+    inShort := true\
+    inLong := false\
+    entryPrice := close\
+    stopLossLevel := high + atrVal * atrMult\
+    swingHighPrice = recentHighest\
+    swingRange = swingHighPrice - entryPrice\
+    fibTargetLevel := swingRange > 0 and useFibExit ? entryPrice - swingRange * fibExtensionLevel : na\
+\
+// Update SL\
+if (useAtrStop and inLong and not isNewBuy)\
+    newStopLong = low - atrVal * atrMult\
+    stopLossLevel := math.max(stopLossLevel, newStopLong)\
+if (useAtrStop and inShort and not isNewSell)\
+    newStopShort = high + atrVal * atrMult\
+    stopLossLevel := math.min(stopLossLevel, newStopShort)\
+\
+// --- Exit Conditions ---\
+atrStopHitLong = useAtrStop and inLong and close < stopLossLevel\
+atrStopHitShort = useAtrStop and inShort and close > stopLossLevel\
+fibHitLong = useFibExit and inLong and not na(fibTargetLevel) and high >= fibTargetLevel\
+fibHitShort = useFibExit and inShort and not na(fibTargetLevel) and low <= fibTargetLevel\
+bbMeanRevertExitLong = useBBExitMeanRevert and inLong and close > bbUpper\
+bbMeanRevertExitShort = useBBExitMeanRevert and inShort and close < bbLower\
+bbReturnExitLong = useBBExitReturnToMean and inLong and bbReturnSell\
+bbReturnExitShort = useBBExitReturnToMean and inShort and bbReturnBuy\
+bbOppositeExitLong = useBBExitOppositeBand and inLong and low <= bbLower\
+bbOppositeExitShort = useBBExitOppositeBand and inShort and high >= bbUpper\
+rsiExitLongCond = useRsiExit and inLong and priceRsi < rsiExitLong\
+rsiExitShortCond = useRsiExit and inShort and priceRsi > rsiExitShort\
+volExitLongCond = useVolExit and inLong and close < emaFast and volume < volMA\
+volExitShortCond = useVolExit and inShort and close > emaFast and volume < volMA\
+emaCrossExitLong = inLong and fastMed_Crossunder\
+emaCrossExitShort = inShort and fastMed_Crossover\
+\
+exitLongSignal = atrStopHitLong or fibHitLong or bbMeanRevertExitLong or bbOppositeExitLong or bbReturnExitLong or rsiExitLongCond or volExitLongCond or emaCrossExitLong\
+exitShortSignal = atrStopHitShort or fibHitShort or bbMeanRevertExitShort or bbOppositeExitShort or bbReturnExitShort or rsiExitShortCond or volExitShortCond or emaCrossExitShort\
+\
+exitedLongThisBar = wasInLong and exitLongSignal\
+exitedShortThisBar = wasInShort and exitShortSignal\
+\
+// Determine Exit Reason Text (Used for labels only now)\
+longExitReason = atrStopHitLong ? "ATR SL" : fibHitLong ? "Fib Tgt" : bbMeanRevertExitLong ? "BB MR" : bbOppositeExitLong ? "BB Oppo" : bbReturnExitLong ? "BB Mid" : rsiExitLongCond ? "RSI" : volExitLongCond ? "Volume" : emaCrossExitLong ? "EMA Cross" : "Exit"\
+shortExitReason = atrStopHitShort ? "ATR SL" : fibHitShort ? "Fib Tgt" : bbMeanRevertExitShort ? "BB MR" : bbOppositeExitShort ? "BB Oppo" : bbReturnExitShort ? "BB Mid" : rsiExitShortCond ? "RSI" : volExitShortCond ? "Volume" : emaCrossExitShort ? "EMA Cross" : "Exit"\
+\
+// Keep track if ATR stop was the specific reason for alert distinction\
+atrStopExitLong = wasInLong and atrStopHitLong\
+atrStopExitShort = wasInShort and atrStopHitShort\
+\
+// --- Reset State on Exit ---\
+if (exitedLongThisBar)\
+    inLong := false\
+    stopLossLevel := na\
+    fibTargetLevel := na\
+    entryPrice := na\
+\
+if (exitedShortThisBar)\
+    inShort := false\
+    stopLossLevel := na\
+    fibTargetLevel := na\
+    entryPrice := na\
+\
+\
+// === PLOTTING ===\
+\
+// Plot EMAs, BBands, SL Lines, Fib Lines...\
+plot(emaFast, color=color.new(color.blue, 0), title="Fast EMA")\
+plot(emaMed, color=color.new(color.orange, 0), title="Medium EMA")\
+plot(emaSlow, color=color.new(color.red, 0), title="Slow EMA")\
+bbMidPlot = plot(showBB ? bbMiddle : na, title="BB Middle", color=bbColor, linewidth=1)\
+bbUpperPlot = plot(showBB ? bbUpper : na, title="BB Upper", color=bbColor, linewidth=1)\
+bbLowerPlot = plot(showBB ? bbLower : na, title="BB Lower", color=bbColor, linewidth=1)\
+fill(bbUpperPlot, bbLowerPlot, color=color.new(bbColor, 90), title="BB Fill")\
+plot(inLong and useAtrStop ? stopLossLevel : na, title="Long Stop Loss", color=color.new(color.maroon, 0), style=plot.style_linebr, linewidth=1)\
+plot(inShort and useAtrStop ? stopLossLevel : na, title="Short Stop Loss", color=color.new(color.teal, 0), style=plot.style_linebr, linewidth=1)\
+plot(inLong and useFibExit ? fibTargetLevel : na, title="Long Fib Target", color=color.new(color.fuchsia, 0), style=plot.style_linebr, linewidth=1)\
+plot(inShort and useFibExit ? fibTargetLevel : na, title="Short Fib Target", color=color.new(color.fuchsia, 0), style=plot.style_linebr, linewidth=1)\
+\
+\
+// UNIFIED SIGNAL LABELS using label.new()\
+if isNewBuy\
+    label.new(bar_index, low, text=buyEntryReason, yloc=yloc.belowbar, color=color.new(color.green, 0), textcolor=color.new(color.white, 0), style=label.style_label_up, size=size.small)\
+if isNewSell\
+    label.new(bar_index, high, text=sellEntryReason, yloc=yloc.abovebar, color=color.new(color.red, 0), textcolor=color.new(color.white, 0), style=label.style_label_down, size=size.small)\
+if exitedLongThisBar\
+    label.new(bar_index, high, text=longExitReason, yloc=yloc.abovebar, color=color.new(color.maroon, 0), textcolor=color.new(color.white, 0), style=label.style_label_down, size=size.small)\
+if exitedShortThisBar\
+    label.new(bar_index, low, text=shortExitReason, yloc=yloc.belowbar, color=color.new(color.teal, 0), textcolor=color.new(color.white, 0), style=label.style_label_up, size=size.small)\
+\
+\
+// Background color\
+bgcolor(inLong ? color.new(color.green, 90) : inShort ? color.new(color.red, 90) : na)\
+\
+// === ALERTS === // SIMPLIFIED CONSTANT MESSAGES\
+alertcondition(isNewBuy, title="New Buy Signal", message="\{\{exchange\}\}:\{\{ticker\}\} - New Buy Signal at \{\{close\}\}")\
+alertcondition(isNewSell, title="New Sell Signal", message="\{\{exchange\}\}:\{\{ticker\}\} - New Sell Signal at \{\{close\}\}")\
+// Generic Exit Alert (covers all non-SL reasons)\
+alertcondition(exitedLongThisBar and not atrStopExitLong, title="Exit Long Signal", message="\{\{exchange\}\}:\{\{ticker\}\} - Exit Long at \{\{close\}\}")\
+alertcondition(exitedShortThisBar and not atrStopExitShort, title="Exit Short Signal", message="\{\{exchange\}\}:\{\{ticker\}\} - Exit Short at \{\{close\}\}")\
+// Specific Alert for ATR Stop Loss\
+alertcondition(atrStopExitLong, title="ATR Stop Hit (Long)", message="\{\{exchange\}\}:\{\{ticker\}\} - ATR Stop Loss Hit (Long) at \{\{close\}\}")\
+alertcondition(atrStopExitShort, title="ATR Stop Hit (Short)", message="\{\{exchange\}\}:\{\{ticker\}\} - ATR Stop Loss Hit (Short) at \{\{close\}\}") 4th. : //@version=6\
+indicator("Consolidated EMA RSI Vol ATR Strategy + Fib", overlay=true)\
+\
+// === INPUTS ===\
+\
+// --- EMAs ---\
+grp1 = "EMA Settings"\
+emaFastLen = input.int(9, title="Fast EMA Length", minval=1, group=grp1)\
+emaMedLen = input.int(14, title="Medium EMA Length", minval=1, group=grp1)\
+emaSlowLen = input.int(21, title="Slow EMA Length", minval=1, group=grp1)\
+\
+// --- RSI ---\
+grp2 = "RSI Settings"\
+rsiLen = input.int(14, title="Price RSI Length", minval=1, group=grp2)\
+useRsiEntryFilter = input.bool(false, title="Use RSI Filter for Entry?", group=grp2)\
+rsiBuyEntry = input.float(50.0, title="RSI Buy Entry Threshold (>)", group=grp2)\
+rsiSellEntry = input.float(50.0, title="RSI Sell Entry Threshold (<)", group=grp2)\
+useRsiExit = input.bool(true, title="Use RSI for Exit?", group=grp2)\
+rsiExitLong = input.float(40.0, title="RSI Exit Long Threshold (<)", group=grp2)\
+rsiExitShort = input.float(60.0, title="RSI Exit Short Threshold (>)", group=grp2)\
+\
+// --- Volume ---\
+grp3 = "Volume Settings"\
+volMALen = input.int(50, title="Volume MA Length", minval=1, group=grp3)\
+useVolEntryFilter = input.bool(false, title="Use Volume Filter for Entry?", group=grp3)\
+useVolExit = input.bool(true, title="Use Volume for Exit?", group=grp3)\
+\
+// --- ATR Stop Loss ---\
+grp4 = "ATR Stop Loss Settings"\
+useAtrStop = input.bool(true, title="Use ATR Stop Loss for Exit?", group=grp4)\
+atrLen = input.int(14, title="ATR Length", minval=1, group=grp4)\
+atrMult = input.float(2.0, title="ATR Multiplier", minval=0.1, group=grp4)\
+\
+// --- Trend Confirmation ---\
+grp5 = "Trend Confirmation"\
+useTrendConfirmation = input.bool(false, title="Require EMA Trend Confirmation for Entry?", group=grp5)\
+\
+// --- Fibonacci Exit ---\
+grp6 = "Fibonacci Extension Exit"\
+useFibExit = input.bool(false, title="Use Fibonacci Extension Exit?", group=grp6)\
+fibLookback = input.int(30, title="Fib Swing Lookback Period", minval=5, group=grp6)\
+fibExtensionLevel = input.float(1.618, title="Fib Extension Target Multiplier", minval=0.1, group=grp6)\
+\
+\
+// === CALCULATIONS ===\
+\
+// --- Indicators ---\
+emaFast = ta.ema(close, emaFastLen)\
+emaMed = ta.ema(close, emaMedLen)\
+emaSlow = ta.ema(close, emaSlowLen)\
+priceRsi = ta.rsi(close, rsiLen)\
+volMA = ta.sma(volume, volMALen)\
+atrVal = ta.atr(atrLen)\
+\
+// --- Crossover/Crossunder Events (Calculated Globally) ---\
+fastSlow_Crossover = ta.crossover(emaFast, emaSlow)\
+fastSlow_Crossunder = ta.crossunder(emaFast, emaSlow)\
+fastMed_Crossover = ta.crossover(emaFast, emaMed)\
+fastMed_Crossunder = ta.crossunder(emaFast, emaMed)\
+\
+// --- Swing High/Low for Fib (Calculated Globally) ---\
+// We use [1] to get the high/low established *before* the current bar's signal.\
+recentLowest = ta.lowest(low, fibLookback)[1]\
+recentHighest = ta.highest(high, fibLookback)[1]\
+\
+// --- Entry Conditions ---\
+baseBuySignal = fastSlow_Crossover\
+baseSellSignal = fastSlow_Crossunder\
+\
+// Filters\
+rsiFilterBuyCond = not useRsiEntryFilter or priceRsi > rsiBuyEntry\
+rsiFilterSellCond = not useRsiEntryFilter or priceRsi < rsiSellEntry\
+volFilterCond = not useVolEntryFilter or volume > volMA\
+trendConfirmBuyCond = not useTrendConfirmation or emaMed > emaSlow\
+trendConfirmSellCond = not useTrendConfirmation or emaMed < emaSlow\
+\
+// Combined Entry Signals\
+buySignal = baseBuySignal and rsiFilterBuyCond and volFilterCond and trendConfirmBuyCond\
+sellSignal = baseSellSignal and rsiFilterSellCond and volFilterCond and trendConfirmSellCond\
+\
+// --- State Tracking, Stop Loss & Fib Target ---\
+var bool inLong = false\
+var bool inShort = false\
+var float stopLossLevel = na\
+var float fibTargetLevel = na\
+var float entryPrice = na\
+\
+// Store previous state to detect new entries properly\
+var bool wasInLong = false\
+var bool wasInShort = false\
+wasInLong := inLong\
+wasInShort := inShort\
+\
+// Check for new entry signals\
+isNewBuy = buySignal and not wasInLong\
+isNewSell = sellSignal and not wasInShort\
+\
+// Update state and set initial stop/target levels on new entries\
+if (isNewBuy)\
+    inLong := true\
+    inShort := false\
+    entryPrice := close\
+    stopLossLevel := low - atrVal * atrMult\
+    // Calculate Fib Target using globally calculated recentLowest\
+    swingLowPrice = recentLowest // Use pre-calculated value\
+    swingRange = entryPrice - swingLowPrice\
+    if swingRange > 0\
+        fibTargetLevel := entryPrice + swingRange * fibExtensionLevel\
+    else\
+        fibTargetLevel := na\
+\
+if (isNewSell)\
+    inShort := true\
+    inLong := false\
+    entryPrice := close\
+    stopLossLevel := high + atrVal * atrMult\
+    // Calculate Fib Target using globally calculated recentHighest\
+    swingHighPrice = recentHighest // Use pre-calculated value\
+    swingRange = swingHighPrice - entryPrice\
+    if swingRange > 0\
+        fibTargetLevel := entryPrice - swingRange * fibExtensionLevel\
+    else\
+        fibTargetLevel := na\
+\
+// Update SL on subsequent bars if enabled and in trade (Trailing Stop)\
+if (useAtrStop and inLong and not isNewBuy)\
+    newStopLong = low - atrVal * atrMult\
+    stopLossLevel := math.max(stopLossLevel, newStopLong)\
+\
+if (useAtrStop and inShort and not isNewSell)\
+    newStopShort = high + atrVal * atrMult\
+    stopLossLevel := math.min(stopLossLevel, newStopShort)\
+\
+\
+// --- Exit Conditions ---\
+// Opposite Crossover Exit\
+exitLong_Cross = inLong and fastMed_Crossunder\
+exitShort_Cross = inShort and fastMed_Crossover\
+\
+// ATR Stop Loss Exit\
+exitLong_ATR = useAtrStop and inLong and close < stopLossLevel\
+exitShort_ATR = useAtrStop and inShort and close > stopLossLevel\
+\
+// RSI Exit\
+exitLong_RSI = useRsiExit and inLong and priceRsi < rsiExitLong\
+exitShort_RSI = useRsiExit and inShort and priceRsi > rsiExitShort\
+\
+// Volume Exit\
+exitLong_Vol = useVolExit and inLong and close < emaFast and volume < volMA\
+exitShort_Vol = useVolExit and inShort and close > emaFast and volume < volMA\
+\
+// Fibonacci Exit\
+exitLong_Fib = useFibExit and inLong and not na(fibTargetLevel) and high >= fibTargetLevel\
+exitShort_Fib = useFibExit and inShort and not na(fibTargetLevel) and low <= fibTargetLevel\
+\
+// Combined Exit Signals\
+exitLongSignal = exitLong_Cross or exitLong_ATR or exitLong_RSI or exitLong_Vol or exitLong_Fib\
+exitShortSignal = exitShort_Cross or exitShort_ATR or exitShort_RSI or exitShort_Vol or exitShort_Fib\
+\
+// Determine if an exit occurred on the current bar\
+exitedLongThisBar = inLong and exitLongSignal\
+exitedShortThisBar = inShort and exitShortSignal\
+\
+// --- Reset State on Exit ---\
+if (exitedLongThisBar)\
+    inLong := false\
+    stopLossLevel := na\
+    fibTargetLevel := na\
+    entryPrice := na\
+\
+if (exitedShortThisBar)\
+    inShort := false\
+    stopLossLevel := na\
+    fibTargetLevel := na\
+    entryPrice := na\
+\
+// Handling potential state flips within the same bar (simplified)\
+if (exitedLongThisBar and isNewSell)\
+    inShort := true\
+    inLong := false\
+    entryPrice := close // Re-capture entry price for immediate flip\
+    stopLossLevel := high + atrVal * atrMult\
+    swingHighPrice = recentHighest\
+    swingRange = swingHighPrice - entryPrice\
+    fibTargetLevel := swingRange > 0 ? entryPrice - swingRange * fibExtensionLevel : na\
+else if (exitedShortThisBar and isNewBuy)\
+    inLong := true\
+    inShort := false\
+    entryPrice := close // Re-capture entry price for immediate flip\
+    stopLossLevel := low - atrVal * atrMult\
+    swingLowPrice = recentLowest\
+    swingRange = entryPrice - swingLowPrice\
+    fibTargetLevel := swingRange > 0 ? entryPrice + swingRange * fibExtensionLevel : na\
+\
+\
+// === PLOTTING ===\
+\
+// Plot EMAs\
+plot(emaFast, color=color.new(color.blue, 0), title="Fast EMA")\
+plot(emaMed, color=color.new(color.orange, 0), title="Medium EMA")\
+plot(emaSlow, color=color.new(color.red, 0), title="Slow EMA")\
+\
+// Plot Entry Arrows\
+plotshape(isNewBuy, title="Buy Signal", location=location.belowbar, color=color.green, style=shape.triangleup, size=size.small)\
+plotshape(isNewSell, title="Sell Signal", location=location.abovebar, color=color.red, style=shape.triangledown, size=size.small)\
+\
+// Plot Exit Arrows\
+plotshape(exitedLongThisBar, title="Exit Long", location=location.abovebar, color=color.new(color.blue, 50), style=shape.cross, size=size.tiny)\
+plotshape(exitedShortThisBar, title="Exit Short", location=location.belowbar, color=color.new(color.orange, 50), style=shape.cross, size=size.tiny)\
+\
+// Plot Stop Loss Level\
+plot(inLong and useAtrStop ? stopLossLevel : na, title="Long Stop Loss", color=color.new(color.maroon, 0), style=plot.style_linebr, linewidth=1)\
+plot(inShort and useAtrStop ? stopLossLevel : na, title="Short Stop Loss", color=color.new(color.teal, 0), style=plot.style_linebr, linewidth=1)\
+\
+// Plot Fibonacci Target Level\
+plot(inLong and useFibExit ? fibTargetLevel : na, title="Long Fib Target", color=color.new(color.fuchsia, 0), style=plot.style_linebr, linewidth=1) // Removed offset for clarity\
+plot(inShort and useFibExit ? fibTargetLevel : na, title="Short Fib Target", color=color.new(color.fuchsia, 0), style=plot.style_linebr, linewidth=1) // Removed offset for clarity\
+\
+// Optional: Background color for trade state\
+bgcolor(inLong ? color.new(color.green, 90) : inShort ? color.new(color.red, 90) : na)\
+}

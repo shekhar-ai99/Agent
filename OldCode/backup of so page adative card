@@ -1,0 +1,150 @@
+
+  {
+    type: "AdaptiveCard",
+    '$schema': "https://adaptivecards.io/schemas/adaptive-card.json",
+    version: "1.5",
+    body: [
+      {
+        type: "TextBlock",
+        text: "Sales Orders - Page " & Topic.CurrentSOPage & " of " & Topic.SOPageNums,
+        weight: "Bolder",
+        size: "Medium",
+        horizontalAlignment: "Center"
+      },
+      {
+        type: "ActionSet",
+        actions: [
+          {
+            type: "Action.Submit",
+            title: Topic.SO1,
+            data: {
+              action: "SelectSO",
+              SelectedSO: Topic.SO1,
+              CurrentSOPage: Topic.CurrentSOPage
+            }
+          }
+        ]
+      },
+      {
+        type: "ActionSet",
+        actions: [
+          {
+            type: "Action.Submit",
+            title: Topic.SO2,
+            data: {
+              action: "SelectSO",
+              SelectedSO: Topic.SO2,
+              CurrentSOPage: Topic.CurrentSOPage
+            }
+          }
+        ]
+      },
+      {
+        type: "ActionSet",
+        actions: [
+          {
+            type: "Action.Submit",
+            title: Topic.SO3,
+            data: {
+              action: "SelectSO",
+              SelectedSO: Topic.SO3,
+              CurrentSOPage: Topic.CurrentSOPage
+            }
+          }
+        ]
+      },
+      {
+        type: "ActionSet",
+        actions: [
+          {
+            type: "Action.Submit",
+            title: Topic.SO4,
+            data: {
+              action: "SelectSO",
+              SelectedSO: Topic.SO4,
+              CurrentSOPage: Topic.CurrentSOPage
+            }
+          }
+        ]
+      },
+      {
+        type: "ActionSet",
+        actions: [
+          {
+            type: "Action.Submit",
+            title: Topic.SO5,
+            data: {
+              action: "SelectSO",
+              SelectedSO: Topic.SO5,
+              CurrentSOPage: Topic.CurrentSOPage
+            }
+          }
+        ]
+      },
+      {
+        type: "ColumnSet",
+        spacing: "Large",
+        columns: [
+          {
+            type: "Column",
+            width: "auto",
+            items: [
+              {
+                type: "ActionSet",
+                actions: [
+                  {
+                    type: "Action.Submit",
+                    title: Topic.BackText,
+                    data: {
+                      action: "Back",
+                      CurrentSOPage: Topic.CurrentSOPage
+                    },
+                    isEnabled: Topic.CurrentSOPage > 1
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            type: "Column",
+            width: "auto",
+            items: [
+              {
+                type: "ActionSet",
+                actions: [
+                  {
+                    type: "Action.Submit",
+                    title: Topic.ContinueText,
+                    data: {
+                      action: "Continue",
+                      CurrentSOPage: Topic.CurrentSOPage
+                    },
+                    isEnabled: Topic.CurrentSOPage < Topic.SOPageNums
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            type: "Column",
+            width: "auto",
+            items: [
+              {
+                type: "ActionSet",
+                actions: [
+                  {
+                    type: "Action.Submit",
+                    title: Topic.CloseText,
+                    data: {
+                      action: "Close"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    actions: []
+  }

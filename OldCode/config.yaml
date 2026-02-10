@@ -1,0 +1,6 @@
+simulation_mode: false  # Set to true for simulation
+exchange: NFO
+api_key: your_api_key
+client_code: your_client_code
+log_level: INFO
+log_file_template: trading_app_{run_id}.log

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backtest Report</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1400px;
+            margin: auto;
+            background-color: #fff;
+            padding: 30px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 8px;
+            margin-top: 35px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: none;
+        }
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .summary-card {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 15px;
+            text-align: center;
+        }
+        .summary-card h4 {
+            margin: 0 0 10px 0;
+            color: #6c757d;
+            font-size: 0.9em;
+            border: none;
+        }
+        .summary-card .value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .positive {
+            color: #27ae60;
+            font-weight: bold;
+        }
+        .negative {
+            color: #c0392b;
+            font-weight: bold;
+        }
+        .neutral {
+            color: #7f8c8d;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 25px;
+            font-size: 0.9em;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px 12px;
+            text-align: right;
+        }
+        th {
+            background-color: #3498db;
+            color: white;
+            text-align: center;
+            font-weight: 600;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .timestamp {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 35px;
+            font-size: 0.9em;
+        }
+        .metric-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 25px;
+            background-color: #fff;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+        }
+        .strategy-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .strategy-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 15px;
+            background-color: #fdfdfd;
+        }
+        .strategy-card h4 {
+            margin-top: 0;
+            color: #3498db;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 8px;
+        }
+        .trade-log {
+            max-height: 600px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+        .trade-log table {
+            font-size: 0.85em;
+        }
+        .trade-log th {
+            position: sticky;
+            top: 0;
+            background-color: #3498db;
+            z-index: 10;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+<h1>Backtest Report: INDIA - 5min</h1>
+<p class="timestamp">Generated on 2026-02-06 01:42:36</p>
+
+<div class="summary-grid">
+    <div class="summary-card">
+        <h4>Total P&L</h4>
+        <div class="value neutral">$0.00</div>
+    </div>
+    <div class="summary-card">
+        <h4>Return %</h4>
+        <div class="value neutral">0.00%</div>
+    </div>
+    <div class="summary-card">
+        <h4>Total Trades</h4>
+        <div class="value">0</div>
+    </div>
+    <div class="summary-card">
+        <h4>Win Rate</h4>
+        <div class="value">0.00%</div>
+    </div>
+    <div class="summary-card">
+        <h4>Profit Factor</h4>
+        <div class="value">0.00</div>
+    </div>
+    <div class="summary-card">
+        <h4>Max Drawdown</h4>
+        <div class="value negative">0.00%</div>
+    </div>
+</div>
+
+<h2>Performance Metrics</h2>
+<div class="metric-card">
+<table>
+<thead>
+<tr>
+    <th>Metric</th>
+    <th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>Initial Capital</td><td>$100,000.00</td></tr>
+<tr><td>Final Equity</td><td>$100,000.00</td></tr>
+<tr><td>Total P&L</td><td>$0.00</td></tr>
+<tr><td>Return %</td><td>0.00%</td></tr>
+<tr><td>Total Trades</td><td>0</td></tr>
+<tr><td>Win Rate</td><td>0.00%</td></tr>
+<tr><td>Profit Factor</td><td>0.00</td></tr>
+<tr><td>Sharpe Ratio</td><td>0.00</td></tr>
+<tr><td>Max Drawdown</td><td>0.00%</td></tr>
+<tr><td>Total Bars</td><td>0</td></tr>
+</tbody></table></div>
+<h2>Strategy Breakdown</h2><p>No trades to analyze.</p><h2>Trade Log</h2><p>No trades executed.</p>
+<div class="footer">
+    <p>Generated by TradingPlatform Backtest Engine</p>
+    <p>This report is for analysis purposes only. Past performance does not guarantee future results.</p>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,677 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Trading Bot Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='report.css') }}">
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      margin: 0;
+      background: #f4f7f9;
+      color: #333;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 95%; 
+      margin: 20px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    }
+    h2, h4, h5 {
+      color: #2c3e50;
+      border-bottom: 1px solid #e0e0e0;
+      padding-bottom: 8px;
+      margin-top: 20px; /* Added margin-top for h4,h5 */
+      margin-bottom: 15px;
+    }
+    h2 { font-size: 1.8em; text-align: center; border-bottom: none; margin-bottom: 25px;}
+    h4 { font-size: 1.3em; }
+    h5 { font-size: 1.1em; margin-top: 25px; color: #17a2b8; } /* Distinct color for sub-sections */
+
+    select, button, input[type="number"] {
+      padding: 10px 15px;
+      font-size: 1em;
+      border-radius: 5px;
+      border: 1px solid #ced4da;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background-color 0.2s ease-in-out;
+      border: none; /* Removed default border for button */
+    }
+    button:hover { background-color: #0056b3; }
+    button:disabled { background: #adb5bd; cursor: not-allowed; }
+
+    .section { margin-bottom: 30px; padding: 20px; background-color: #ffffff; border-radius: 8px; border: 1px solid #dee2e6;}
+    .run-controls, .view-controls, .contextual-filters, .optuna-filters { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 20px; }
+    
+    #status-message { padding: 12px; margin: 20px 0; font-weight: 500; border-radius: 5px; text-align: center; }
+    .status-running { background: #fff3cd; border: 1px solid #ffeeba; color: #856404; }
+    .status-success { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
+    .status-error   { background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
+    .status-idle    { background: #e9ecef; border: 1px solid #ced4da; color: #495057; }
+
+    #logDisplaySection pre { max-height: 350px; overflow-y: auto; background: #282c34; color: #abb2bf; border: 1px solid #3d424d; padding: 15px; white-space: pre-wrap; word-wrap: break-word; border-radius: 4px; font-family: 'Consolas', 'Monaco', monospace; font-size: 0.9em;}
+    
+    .table-container { max-height: 450px; overflow: auto; border: 1px solid #dee2e6; border-radius: .25rem; margin-top: 10px; margin-bottom:20px;}
+    table { width: 100%; border-collapse: collapse; font-size: 0.9em; }
+    th, td { border: 1px solid #dee2e6; padding: 0.7rem 0.9rem; text-align: left; vertical-align: middle; }
+    th { background-color: #e9ecef; font-weight: 600; color: #495057; position: sticky; top: 0; z-index: 1;}
+    tr:nth-child(even) { background-color: #f8f9fa; }
+    td pre { font-size: 0.85em; margin:0; padding: 4px; background-color: #e9ecef; border-radius:3px; max-width: 300px; overflow-x: auto; white-space: pre-wrap;}
+    td a { color: #007bff; text-decoration: none; font-weight: 500; }
+    td a:hover { text-decoration: underline; color: #0056b3;}
+
+    .chart-container-contextual, .chart-container-optuna {
+        width: 100%; max-width: 700px; margin: 20px auto; padding: 15px;
+        border: 1px solid #dee2e6; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    .optuna-charts-grid { display: flex; flex-wrap: wrap; justify-content: space-around; gap: 20px; }
+    .optuna-analytics-section, .contextual-performance-section { margin-top: 30px; padding-top: 20px; border-top: 2px solid #007bff; }
+    
+    #pipelineRunSummaryDisplay { margin-top: 15px; }
+    #pipelineRunSummaryDisplay h5 { margin-top: 25px; color: #0056b3; border-bottom: 1px dashed #0056b3; padding-bottom: 5px;}
+    hr { border: 0; height: 1px; background: #dee2e6; margin: 30px 0; }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h2>Trading Bot Dashboard & Analytics</h2>
+
+    <div class="section">
+      <h4>Run New Pipeline</h4>
+      <form id="pipelineRunForm">
+        <div class="run-controls">
+          <button type="submit" id="runPipelineButton">Run Full Pipeline</button>
+          <span id="loadingIndicator" style="display:none;">⏳ Running...</span>
+        </div>
+      </form>
+    </div>
+
+    <div class="section">
+      <h4>View Past Pipeline Run Summary</h4>
+      <div class="view-controls">
+        <label for="pipelineRunSelector">Select Pipeline Run ID:</label>
+        <select id="pipelineRunSelector">
+          <option value="">-- Loading Runs --</option>
+        </select>
+        <button id="viewPipelineRunSummaryButton" disabled>View Run Summary (from DB)</button>
+      </div>
+    </div>
+
+    <div id="status-message" class="status-idle">Idle.</div>
+    <div class="section" id="logDisplaySection" style="display:none;">
+      <h4>Live Logs for Pipeline Run ID: <span id="logPipelineRunId"></span></h4>
+      <pre id="logOutput"></pre>
+    </div>
+
+    <div id="pipelineRunSummaryDisplay" class="section" style="display:none;">
+      <h4 id="summaryPipelineRunIdTitle"></h4>
+      <div id="pipelineRunSummaryContent">
+          </div>
+    </div>
+
+    <hr>
+
+    <div class="section contextual-performance-section">
+        <h4>Contextual Performance Analytics (from MongoDB)</h4>
+        <div class="contextual-filters">
+            <div><label for="ctxSymbol">Symbol:</label><select id="ctxSymbol"><option value="NIFTY" selected>NIFTY</option><option value="BANKNIFTY">BANKNIFTY</option></select></div>
+            <div><label for="ctxTimeframe">Timeframe:</label><select id="ctxTimeframe"><option value="1min">1min</option><option value="3min">3min</option><option value="5min" selected>5min</option><option value="15min">15min</option></select></div>
+            <div><label for="ctxSession">Session:</label><select id="ctxSession"><option value="" selected>All Day</option><option value="Morning">Morning</option><option value="Midday">Midday</option><option value="Afternoon">Afternoon</option></select></div>
+            <div><label for="ctxDay">Day:</label><select id="ctxDay"><option value="" selected>Any Day</option><option value="Monday">Monday</option><option value="Tuesday">Tuesday</option><option value="Wednesday">Wednesday</option><option value="Thursday">Thursday</option><option value="Friday">Friday</option></select></div>
+            <div><label for="ctxIsExpiry">Is Expiry:</label><select id="ctxIsExpiry"><option value="" selected>Any</option><option value="true">Yes</option><option value="false">No</option></select></div>
+            <div><label for="ctxMarketCondition">Market Condition:</label><select id="ctxMarketCondition"><option value="" selected>Any Regime</option><option value="Trending">Trending</option><option value="Ranging">Ranging</option><option value="Volatile">Volatile</option><option value="Choppy">Choppy</option><option value="Unknown">Unknown</option></select></div>
+            <div><label for="ctxVolatilityStatus">Volatility Status:</label><select id="ctxVolatilityStatus"><option value="" selected>Any Volatility</option><option value="High">High</option><option value="Normal">Normal</option><option value="Low">Low</option><option value="Unknown">Unknown</option></select></div>
+            <div><label for="ctxLimit">Limit:</label><input type="number" id="ctxLimit" value="10" min="1" max="50" style="width: 60px;"></div>
+            <button id="fetchContextualSummaryButton">Fetch Contextual Summary</button>
+        </div>
+        <div id="contextualSummaryResult">
+            <div class="chart-container-contextual"><canvas id="contextualPerformanceChart"></canvas></div>
+            <div id="contextualSummaryTableContainer"><p>Select filters and click "Fetch Summary" to see results.</p></div>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="section optuna-analytics-section">
+        <h4>Optuna Tuning Analytics</h4>
+        <div class="optuna-filters">
+            <div><label for="optunaStudySelector">Select Optuna Study:</label><select id="optunaStudySelector"><option value="">-- Loading Studies --</option></select></div>
+            <button id="fetchOptunaStudyDataButton" disabled>View Study Insights</button>
+        </div>
+        <div id="optunaChartsContainer" style="display:none;">
+            <h5 id="selectedOptunaStudyTitle"></h5>
+            <div class="optuna-charts-grid">
+                <div class="chart-container-optuna"><canvas id="optunaTrialsScatterChart"></canvas></div>
+                <div class="chart-container-optuna"><canvas id="optunaTopTrialsLineChart"></canvas></div>
+                <div class="chart-container-optuna"><canvas id="optunaParamImportanceChart"></canvas></div>
+            </div>
+            <div id="optunaParamsTableContainer" style="margin-top: 20px;"></div>
+        </div>
+        <div id="optunaLoadingMessage" style="display:none;"><p>Loading Optuna study data...</p></div>
+        <div id="optunaErrorMessage" style="color:red; margin-top:10px;"></div>
+    </div>
+
+  </div>
+
+  <script>
+    // --- DOM Element References ---
+    const pipelineRunForm = document.getElementById('pipelineRunForm');
+    const runPipelineButton = document.getElementById('runPipelineButton');
+    const pipelineRunSelector = document.getElementById('pipelineRunSelector');
+    const viewPipelineRunSummaryButton = document.getElementById('viewPipelineRunSummaryButton');
+    const statusMessage = document.getElementById('status-message');
+    const pipelineRunSummaryDisplay = document.getElementById('pipelineRunSummaryDisplay');
+    const summaryPipelineRunIdTitle = document.getElementById('summaryPipelineRunIdTitle');
+    const pipelineRunSummaryContent = document.getElementById('pipelineRunSummaryContent');
+    const logDisplaySection = document.getElementById('logDisplaySection');
+    const logOutput = document.getElementById('logOutput');
+    const logPipelineRunId = document.getElementById('logPipelineRunId');
+    let eventSource = null;
+
+    const fetchContextualSummaryButton = document.getElementById('fetchContextualSummaryButton');
+    const contextualSummaryTableContainer = document.getElementById('contextualSummaryTableContainer');
+    const contextualPerformanceChartCanvas = document.getElementById('contextualPerformanceChart');
+    let contextualChartInstance = null;
+
+    const optunaStudySelector = document.getElementById('optunaStudySelector');
+    const fetchOptunaStudyDataButton = document.getElementById('fetchOptunaStudyDataButton');
+    const optunaChartsContainer = document.getElementById('optunaChartsContainer');
+    const selectedOptunaStudyTitle = document.getElementById('selectedOptunaStudyTitle');
+    const optunaLoadingMessage = document.getElementById('optunaLoadingMessage');
+    const optunaErrorMessage = document.getElementById('optunaErrorMessage');
+    const optunaParamsTableContainer = document.getElementById('optunaParamsTableContainer');
+    let optunaTrialsScatterInstance = null;
+    let optunaTopTrialsLineInstance = null;
+    let currentPipelineSummaryData = null; // ← Store summary after load
+
+
+    function updateStatus(msg, type = 'idle') {
+      statusMessage.textContent = msg;
+      statusMessage.className = `status-${type}`;
+    }
+
+    async function loadPipelineRunIds() {
+      try {
+        const resp = await fetch('/runs');
+        const runIds = await resp.json();
+        pipelineRunSelector.innerHTML = '<option value="">-- Select a Pipeline Run --</option>';
+        if (runIds && runIds.length > 0) {
+            runIds.forEach(runId => {
+              const opt = document.createElement('option');
+              opt.value = runId;
+              opt.textContent = runId;
+              pipelineRunSelector.appendChild(opt);
+            });
+        } else {
+            pipelineRunSelector.innerHTML = '<option value="">-- No past runs found --</option>';
+        }
+        viewPipelineRunSummaryButton.disabled = !pipelineRunSelector.value;
+      } catch (err) {
+        console.error("Error loading pipeline run IDs:", err);
+        pipelineRunSelector.innerHTML = '<option>Error loading runs</option>';
+      }
+    }
+
+    pipelineRunSelector.onchange = () => {
+      viewPipelineRunSummaryButton.disabled = !pipelineRunSelector.value;
+      if (!pipelineRunSelector.value) {
+        pipelineRunSummaryDisplay.style.display = 'none';
+        pipelineRunSummaryContent.innerHTML = ''; // Clear content
+      }
+    };
+
+    viewPipelineRunSummaryButton.onclick = () => {
+      const selectedPipelineRunId = pipelineRunSelector.value;
+      if (selectedPipelineRunId) loadPipelineRunMongoSummaryDisplay(selectedPipelineRunId);
+    };
+    
+    function startLogStreaming(currentPipelineRunId) { // Renamed param for clarity
+        if (eventSource) { eventSource.close(); }
+        logOutput.textContent = ''; 
+        logPipelineRunId.textContent = currentPipelineRunId;
+        logDisplaySection.style.display = 'block';
+        updateStatus(`Pipeline Run ${currentPipelineRunId} started. Streaming logs...`, 'running');
+        eventSource = new EventSource(`/stream_logs/${currentPipelineRunId}`);
+        eventSource.onmessage = function(event) {
+            logOutput.textContent += event.data + '\n';
+            logOutput.scrollTop = logOutput.scrollHeight;
+        };
+        eventSource.onerror = function(error) {
+            console.error("EventSource failed:", error);
+            logOutput.textContent += "--- Log stream error or closed ---\n";
+            if (eventSource) eventSource.close();
+            eventSource = null;
+            checkFinalPipelineStatus(currentPipelineRunId);
+        };
+    }
+
+    function stopLogStreaming() {
+        if (eventSource) {
+            eventSource.close();
+            eventSource = null;
+            logOutput.textContent += "--- Log stream stopped by user/completion ---\n";
+        }
+    }
+
+    async function checkFinalPipelineStatus(currentPipelineRunId) {
+         try {
+             const statusResp = await fetch('/status');
+             const statusData = await statusResp.json();
+             if (statusData.run_id === currentPipelineRunId && !statusData.running) {
+                 updateStatus(statusData.message || `Pipeline Run ${currentPipelineRunId} finished.`, statusData.error ? 'error' : 'success');
+             }
+         } catch (err) {
+             console.error("Error checking final pipeline status:", err);
+         }
+    }
+    
+    pipelineRunForm.onsubmit = async (e) => {
+        e.preventDefault(); 
+        logDisplaySection.style.display = 'none'; 
+        updateStatus("Triggering new pipeline run...", "running");
+        stopLogStreaming(); 
+
+        try {
+            const resp = await fetch('/start_backtest', {
+                 method: 'POST', 
+                 headers: { 'Content-Type': 'application/json' },
+                 body: JSON.stringify({})
+            });
+            if (!resp.ok) {
+                const errorData = await resp.json().catch(() => ({error: `Failed to start run (Status: ${resp.status})`}));
+                throw new Error(errorData.error);
+            }
+            const data = await resp.json();
+            if (!data.run_id) { throw new Error("Failed to get pipeline_run_id from server."); }
+            
+            const currentPipelineRunId = data.run_id;
+            startLogStreaming(currentPipelineRunId);
+
+            const waitForFinish = async () => {
+                 const statusResp = await fetch('/status');
+                 const statusData = await statusResp.json();
+                 if (statusData.run_id !== currentPipelineRunId) {
+                      if(eventSource && logPipelineRunId.textContent === currentPipelineRunId) stopLogStreaming(); 
+                      return; 
+                 }
+                 if (statusData.running) {
+                      updateStatus(statusData.message || `Pipeline Run ${currentPipelineRunId} in progress...`, 'running');
+                      setTimeout(waitForFinish, 3000);
+                 } else {
+                      updateStatus(statusData.message || `Pipeline Run ${currentPipelineRunId} finished.`, statusData.error ? 'error' : 'success');
+                      if(eventSource && logPipelineRunId.textContent === currentPipelineRunId) stopLogStreaming();
+                      await loadPipelineRunIds(); 
+                      pipelineRunSelector.value = currentPipelineRunId; 
+                      viewPipelineRunSummaryButton.disabled = false;
+                      loadPipelineRunMongoSummaryDisplay(currentPipelineRunId); 
+                 }
+            };
+            waitForFinish();
+        } catch (err) {
+            console.error("Error starting pipeline run:", err);
+            updateStatus(`Error: ${err.message}`, "error");
+            stopLogStreaming();
+        }
+    };
+
+    // --- Function for "View Past Pipeline Run Summary" (MongoDB Driven) ---
+    async function loadPipelineRunMongoSummaryDisplay(pipelineRunId) {
+        if (!pipelineRunId) return;
+        updateStatus(`Loading MongoDB summary for Pipeline Run ID: ${pipelineRunId}...`, 'running');
+        summaryPipelineRunIdTitle.textContent = `Summary for Pipeline Run ID: ${pipelineRunId}`;
+        pipelineRunSummaryContent.innerHTML = '<p>Fetching data from MongoDB...</p>';
+        pipelineRunSummaryDisplay.style.display = 'block';
+
+        try {
+            const apiUrl = `/api/mongo/pipeline_run_summary/${pipelineRunId}`;
+            const resp = await fetch(apiUrl);
+            const data = await resp.json();
+            currentPipelineSummaryData = data; // ← Store globally
+
+            console.log(`Data from /api/mongo/pipeline_run_summary/${pipelineRunId}:`, data);
+
+            if (!resp.ok || data.error) {
+                throw new Error(data.error || data.message || `Failed to fetch pipeline run summary (Status: ${resp.status})`);
+            }
+            if (data.message && (!data.individual_strategy_results || data.individual_strategy_results.length === 0) && (!data.optuna_studies_overview || data.optuna_studies_overview.length === 0)) {
+                 pipelineRunSummaryContent.innerHTML = `<p>${data.message}</p>`;
+                 updateStatus(`Summary for ${pipelineRunId}: ${data.message}`, 'idle');
+                 return;
+            }
+
+            let contentHtml = '';
+            
+            if (data.individual_strategy_results && data.individual_strategy_results.length > 0) {
+                contentHtml += `<h5>Individual Strategy Backtests (from this Pipeline Run):</h5>`;
+                let strategiesTable = '<div class="table-container"><table><thead><tr><th>Strategy</th><th>Symbol</th><th>TF</th><th>Score</th><th>PnL</th><th>Trades</th><th>Win%</th><th>Parameters</th><th>Details</th></tr></thead><tbody>';
+                data.individual_strategy_results.forEach(sr => {
+                    strategiesTable += `<tr>
+                        <td>${sr.strategy_name || 'N/A'}</td>
+                        <td>${sr.symbol || 'N/A'}</td>
+                        <td>${sr.timeframe || 'N/A'}</td>
+                        <td>${sr.performance_score != null ? sr.performance_score.toFixed(2) : 'N/A'}</td>
+                        <td>${sr.total_pnl != null ? sr.total_pnl.toFixed(2) : 'N/A'}</td>
+                        <td>${sr.trade_count != null ? sr.trade_count : 'N/A'}</td>
+                        <td>${sr.win_rate != null ? sr.win_rate.toFixed(2) + '%' : 'N/A'}</td>
+                        <td><pre>${JSON.stringify(sr.parameters_used || {}, null, 1)}</pre></td>
+                        <td>${sr.doc_id ? `<a href="/results_html/${sr.run_id}/detailed?doc_id=${sr.doc_id}" target="_blank" title="View detailed trades for this specific run">View Trades</a>` : 'No DB Link'}</td>
+                    </tr>`;
+                });
+                strategiesTable += '</tbody></table></div>';
+                contentHtml += strategiesTable;
+            } else {
+                contentHtml += '<p>No individual strategy backtest results found in MongoDB for this pipeline run.</p>';
+            }
+
+            if (data.optuna_studies_overview && data.optuna_studies_overview.length > 0) {
+                contentHtml += `<h5 style="margin-top:20px;">Optuna Tuning Study Summaries (from this Pipeline Run):</h5>`;
+                let optunaTable = '<div class="table-container"><table><thead><tr><th>Optuna Study</th><th>Symbol</th><th>TF</th><th>Trials</th><th>Best Score</th><th>Best Trial #</th><th>Best Params</th><th>View Study Charts</th><th>Best Trial Trades</th></tr></thead><tbody>';
+                data.optuna_studies_overview.forEach(studyInfo => {
+                    let studyNameForApi = studyInfo.study_name || "UnknownStudy";
+                    try { 
+                        studyNameForApi = btoa(studyInfo.study_name || '').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+                    } catch (e) { console.warn("Could not base64 encode study name for link, using raw: ", studyInfo.study_name, e); }
+
+                    optunaTable += `<tr>
+                        <td>${studyInfo.study_name || 'N/A'}</td>
+                        <td>${studyInfo.symbol || 'N/A'}</td>
+                        <td>${studyInfo.timeframe || 'N/A'}</td>
+                        <td>${studyInfo.trial_count}</td>
+                        <td>${studyInfo.best_score != null ? studyInfo.best_score.toFixed(2) : 'N/A'}</td>
+                        <td>${studyInfo.best_trial_number != null ? studyInfo.best_trial_number : 'N/A'}</td>
+                        <td><pre>${JSON.stringify(studyInfo.best_trial_params || {}, null, 1)}</pre></td>
+                        <td><a href="#" onclick="event.preventDefault(); selectAndDisplayOptunaStudy('${studyInfo.study_name}', '${studyNameForApi}'); return false;" title="Show Optuna charts for this study below">View Charts</a></td>
+                        <td>${studyInfo.best_trial_mongodb_id ? `<a href="/results_html/${studyInfo.run_id}/detailed?doc_id=${studyInfo.best_trial_mongodb_id}" target="_blank" title="View detailed trades for the best trial">View Trades</a>` : 'N/A'}</td>
+                    </tr>`;
+                });
+                optunaTable += '</tbody></table></div>';
+                contentHtml += optunaTable;
+            } else {
+                contentHtml += '<p style="margin-top:20px;">No Optuna tuning studies were part of this pipeline run or no summary data logged.</p>';
+            }
+
+            pipelineRunSummaryContent.innerHTML = contentHtml;
+            updateStatus(`Loaded MongoDB summary for Pipeline Run ID: ${pipelineRunId}`, 'success');
+            if (data.optuna_studies_overview && data.optuna_studies_overview.length > 0) {
+    renderContextualPerformanceFromPipelineSummary(data.optuna_studies_overview);
+}
+
+
+        } catch (err) {
+            console.error("Error loading pipeline run summary from MongoDB:", err);
+            updateStatus(`Error loading summary for ${pipelineRunId}: ${err.message}`, 'error');
+            pipelineRunSummaryContent.innerHTML = `<p style="color:red;">Error displaying summary: ${err.message}</p>`;
+        }
+    }
+    function renderContextualPerformanceFromPipelineSummary(optunaData) {
+    if (!optunaData || optunaData.length === 0) {
+        contextualSummaryTableContainer.innerHTML = '<p>No data found in Optuna summary.</p>';
+        return;
+    }
+
+    const sorted = [...optunaData].sort((a, b) => (b.best_score || 0) - (a.best_score || 0));
+    
+    let tableHtml = '<div class="table-container"><table><thead><tr>' +
+      '<th>Study</th><th>Symbol</th><th>TF</th><th>Best Score</th><th>Best Trial #</th>' +
+      '<th>Params</th><th>Details</th></tr></thead><tbody>';
+
+    const chartLabels = [];
+    const chartScores = [];
+    const chartColors = [];
+
+    sorted.forEach((entry, idx) => {
+        const score = entry.best_score || 0;
+        const studyName = entry.study_name || "N/A";
+        const docId = entry.best_trial_mongodb_id;
+        const runId = entry.run_id || "N/A";
+        const link = docId ? `<a href="/results_html/${runId}/detailed?doc_id=${docId}" target="_blank">View</a>` : "N/A";
+
+        chartLabels.push(`${studyName.slice(0, 10)}...`);
+        chartScores.push(score);
+        chartColors.push(`hsl(${(idx * 360 / sorted.length) % 360}, 70%, 60%)`);
+
+        tableHtml += `<tr>
+            <td>${studyName}</td>
+            <td>${entry.symbol}</td>
+            <td>${entry.timeframe}</td>
+            <td>${score.toFixed(2)}</td>
+            <td>${entry.best_trial_number}</td>
+            <td><pre>${JSON.stringify(entry.best_trial_params || {}, null, 1)}</pre></td>
+            <td>${link}</td>
+        </tr>`;
+    });
+
+    tableHtml += '</tbody></table></div>';
+    contextualSummaryTableContainer.innerHTML = tableHtml;
+
+    if (contextualPerformanceChartCanvas) {
+        if (contextualChartInstance) contextualChartInstance.destroy();
+        contextualChartInstance = new Chart(contextualPerformanceChartCanvas, {
+            type: 'bar',
+            data: { labels: chartLabels, datasets: [{ label: 'Best Performance Score', data: chartScores, backgroundColor: chartColors }] },
+            options: {
+                responsive: true,
+                indexAxis: 'y',
+                scales: { x: { beginAtZero: true } },
+                plugins: { legend: { display: false }, title: { display: true, text: 'Contextual Strategy Ranking (from Optuna Summary)' } }
+            }
+        });
+    }
+}
+
+    function selectAndDisplayOptunaStudy(decodedStudyName, encodedStudyNameForApi) {
+        if (optunaStudySelector) {
+            let found = false;
+            for (let i = 0; i < optunaStudySelector.options.length; i++) {
+                if (optunaStudySelector.options[i].value === decodedStudyName) {
+                    optunaStudySelector.value = decodedStudyName;
+                    found = true; break;
+                }
+            }
+            if (found) {
+                fetchOptunaStudyDataButton.disabled = false;
+                fetchOptunaStudyDataButton.click();
+                document.querySelector('.optuna-analytics-section')?.scrollIntoView({ behavior: 'smooth' });
+            } else {
+                 console.warn(`Study '${decodedStudyName}' not found in dropdown, attempting direct fetch using encoded name: ${encodedStudyNameForApi}.`);
+                 fetchAndDisplayOptunaStudyVisuals(encodedStudyNameForApi, decodedStudyName); 
+                 document.querySelector('.optuna-analytics-section')?.scrollIntoView({ behavior: 'smooth' });
+            }
+        } else { console.error("Optuna study selector not found."); }
+    }
+
+    // --- Contextual Summary JS ---
+fetchContextualSummaryButton.onclick = () => {
+    if (!currentPipelineSummaryData || !currentPipelineSummaryData.optuna_studies_overview) {
+        contextualSummaryTableContainer.innerHTML = '<p>No cached contextual summary available.</p>';
+        return;
+    }
+
+    const rawData = currentPipelineSummaryData.optuna_studies_overview;
+
+    const symbol = document.getElementById('ctxSymbol').value;
+    const timeframe = document.getElementById('ctxTimeframe').value;
+    const session = document.getElementById('ctxSession').value;
+    const day = document.getElementById('ctxDay').value;
+    const isExpiry = document.getElementById('ctxIsExpiry').value;
+    const marketCondition = document.getElementById('ctxMarketCondition').value;
+    const volatilityStatus = document.getElementById('ctxVolatilityStatus').value;
+    const limit = parseInt(document.getElementById('ctxLimit').value || "10", 10);
+const normalizeTimeframe = tf => tf?.split('_')[0];
+    
+       let filtered = rawData.filter(item => {
+    if (symbol && item.symbol !== symbol) return false;
+    if (timeframe && normalizeTimeframe(item.timeframe) !== timeframe) return false;
+    if (session && item.session !== session) return false;
+    if (day && item.day !== day) return false;
+    if (isExpiry === "true" && item.is_expiry !== true) return false;
+    if (isExpiry === "false" && item.is_expiry !== false) return false;
+    if (marketCondition && marketCondition !== "Any Regime" && item.market_condition !== marketCondition) return false;
+    if (volatilityStatus && volatilityStatus !== "Any Volatility" &&
+        item.optuna_study_name && !item.optuna_study_name.includes(`Volatility=${volatilityStatus}`)) return false;
+    return true;
+});
+
+
+    filtered = filtered
+        .sort((a, b) => (b.achieved_performance_score || 0) - (a.achieved_performance_score || 0))
+        .slice(0, limit);
+
+    if (filtered.length === 0) {
+        contextualSummaryTableContainer.innerHTML = `<p>No matching data found for the filters.</p>`;
+        if (contextualChartInstance) contextualChartInstance.destroy();
+        updateStatus('No filtered data found.', 'idle');
+        return;
+    }
+
+    // reuse your existing rendering function
+    renderContextualPerformanceFromPipelineSummary(filtered);
+    updateStatus(`Filtered ${filtered.length} strategies from cached Optuna summary.`, 'success');
+};
+
+    // --- Optuna Analytics JS ---
+    async function loadOptunaStudyNames() {
+        optunaStudySelector.innerHTML = '<option value="">-- Loading Studies --</option>';
+        fetchOptunaStudyDataButton.disabled = true;
+        try {
+            const apiUrl = `/api/mongo/optuna_studies`;
+            const response = await fetch(apiUrl);
+            if (!response.ok) throw new Error(`Failed to load Optuna studies: ${response.status}`);
+            const studyNames = await response.json();
+            if (studyNames && studyNames.length > 0) {
+                optunaStudySelector.innerHTML = '<option value="">-- Select an Optuna Study --</option>';
+                studyNames.forEach(name => {
+                    const option = document.createElement('option'); option.value = name; option.textContent = name;
+                    optunaStudySelector.appendChild(option);
+                });
+            } else {
+                optunaStudySelector.innerHTML = '<option value="">-- No Optuna studies found --</option>';
+            }
+        } catch (error) {
+            console.error("Error loading Optuna study names:", error);
+            optunaStudySelector.innerHTML = '<option value="">-- Error loading studies --</option>';
+            optunaErrorMessage.textContent = `Error loading study list: ${error.message}`;
+        }
+    }
+
+    optunaStudySelector.onchange = () => {
+        fetchOptunaStudyDataButton.disabled = !optunaStudySelector.value;
+        optunaChartsContainer.style.display = 'none'; 
+        optunaErrorMessage.textContent = '';
+        optunaParamsTableContainer.innerHTML = '';
+    };
+    
+    async function fetchAndDisplayOptunaStudyVisuals(studyNameForApi, displayStudyName) {
+        if (!studyNameForApi) return;
+        optunaLoadingMessage.style.display = 'block';
+        optunaChartsContainer.style.display = 'none';
+        optunaErrorMessage.textContent = '';
+        optunaParamsTableContainer.innerHTML = '';
+
+        if (optunaTrialsScatterInstance) optunaTrialsScatterInstance.destroy();
+        if (optunaTopTrialsLineInstance) optunaTopTrialsLineInstance.destroy();
+
+        try {
+            const apiUrl = `/api/mongo/optuna_study_trials/${studyNameForApi}`;
+            const response = await fetch(apiUrl);
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({ "error": `Server error: ${response.status}` }));
+                throw new Error(errorData.message || errorData.error || `Failed to fetch trial data for ${displayStudyName}: ${response.status}`);
+            }
+            const trialsData = await response.json();
+
+            if (trialsData.error) throw new Error(trialsData.error);
+            if (!trialsData || trialsData.length === 0) {
+                 optunaErrorMessage.textContent = `No trial data found for study: ${displayStudyName}`;
+                 optunaLoadingMessage.style.display = 'none';
+                 return;
+            }
+
+            selectedOptunaStudyTitle.textContent = `Insights for Study: ${displayStudyName}`;
+            optunaChartsContainer.style.display = 'block';
+
+            const scatterPlotData = trialsData.map(trial => ({ x: trial.trial_number, y: trial.performance_score }));
+            const scatterCtx = document.getElementById('optunaTrialsScatterChart').getContext('2d');
+            optunaTrialsScatterInstance = new Chart(scatterCtx, { 
+                type: 'scatter',
+                data: { datasets: [{ label: 'Performance Score per Trial', data: scatterPlotData, backgroundColor: 'rgba(54, 162, 235, 0.6)' }] },
+                options: { scales: { x: { title: { display: true, text: 'Trial Number' }}, y: { title: { display: true, text: 'Performance Score' }}}, plugins: { title: { display: true, text: 'Trial Performance vs. Trial Number' }}}
+            });
+
+            const lineChartData = trialsData.sort((a, b) => a.trial_number - b.trial_number).map(trial => ({ x: trial.trial_number, y: trial.performance_score }));
+            const lineCtx = document.getElementById('optunaTopTrialsLineChart').getContext('2d');
+            optunaTopTrialsLineInstance = new Chart(lineCtx, {
+                type: 'line',
+                data: { datasets: [{ label: 'Performance Score Trend', data: lineChartData, borderColor: 'rgba(75, 192, 192, 1)', tension: 0.1, fill:false }] },
+                options: { scales: { x: { type: 'linear', title: { display: true, text: 'Trial Number' }}, y: { title: { display: true, text: 'Performance Score' }}}, plugins: { title: { display: true, text: 'Score Evolution Across Trials' }}}
+            });
+            
+            const topNTrials = trialsData.sort((a,b) => (b.performance_score || -Infinity) - (a.performance_score || -Infinity)).slice(0, 10);
+            let paramsTableHtml = '<h5>Top 10 Trials:</h5><div class="table-container"><table><thead><tr><th>Trial#</th><th>Score</th><th>Params</th><th>PnL</th><th>Trades</th><th>Win%</th><th>Details (DB ID)</th></tr></thead><tbody>';
+            topNTrials.forEach(trial => {
+                const pipelineRunIdForPath = trial.run_id || "NA_run"; // Use actual pipeline run_id if available
+                const docIdLink = trial._id ? `<a href="/results_html/${pipelineRunIdForPath}/detailed?doc_id=${trial._id}" target="_blank">${trial._id.slice(-6)}...</a>` : 'N/A';
+                paramsTableHtml += `<tr>
+                    <td>${trial.trial_number}</td>
+                    <td>${trial.performance_score?.toFixed(2) || 'N/A'}</td>
+                    <td><pre>${JSON.stringify(trial.parameters_used, null, 1)}</pre></td>
+                    <td>${trial.total_pnl?.toFixed(2) || 'N/A'}</td>
+                    <td>${trial.trade_count || 'N/A'}</td>
+                    <td>${trial.win_rate?.toFixed(1) || 'N/A'}%</td>
+                    <td>${docIdLink}</td>
+                </tr>`;
+            });
+            paramsTableHtml += '</tbody></table></div>';
+            optunaParamsTableContainer.innerHTML = paramsTableHtml;
+
+        } catch (error) {
+            console.error("Error fetching/displaying Optuna study data:", error);
+            optunaErrorMessage.textContent = `Error: ${error.message}`;
+        } finally {
+            optunaLoadingMessage.style.display = 'none';
+        }
+    }
+    
+    fetchOptunaStudyDataButton.onclick = () => {
+        const selectedStudyName = optunaStudySelector.value;
+        if (!selectedStudyName) return;
+        let studyNameForApi = selectedStudyName; // Use raw name first
+        try { 
+            // Attempt base64 encoding for URL path segment
+            let encoded = btoa(unescape(encodeURIComponent(selectedStudyName))); // Handles UTF-8 then base64
+            studyNameForApi = encoded.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+        } catch (e) { 
+            console.warn("Could not base64 encode study name for API call, using raw (might fail if contains '/'): ", selectedStudyName, e); 
+            // If base64 fails, use raw name but ensure it's URI component encoded for safety if passed as path
+            studyNameForApi = encodeURIComponent(selectedStudyName); 
+        }
+        fetchAndDisplayOptunaStudyVisuals(studyNameForApi, selectedStudyName);
+    };
+
+    // --- Initial Load ---
+    window.addEventListener('DOMContentLoaded', () => {
+        loadPipelineRunIds(); 
+        loadOptunaStudyNames(); 
+        updateStatus("Idle.");
+    });
+    window.addEventListener('beforeunload', () => { if (eventSource) { eventSource.close(); } });
+  </script>
+</body>
+</html>

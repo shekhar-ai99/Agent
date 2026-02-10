@@ -1,0 +1,426 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Detailed Backtest Report</title>
+  <link rel="stylesheet" href="/static/report.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@1.0.0/dist/chartjs-adapter-moment.min.js"></script>
+  <style>
+    .chart-container {
+      width: 100%;
+      max-width: 750px; 
+      margin: 25px auto;
+      padding: 15px;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      background-color: #fdfdfd;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .charts-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around; 
+      gap: 20px; 
+    }
+    .table-container {
+        max-height: 500px;
+        overflow-y: auto;
+        margin-top:15px;
+    }
+    /* Your other existing styles from report.css or inline */
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Detailed Backtest Report</h1>
+    <p>Displaying details for Run Document ID: <b id="runDocIdDisplay">Loading...</b></p>
+    <p class="timestamp" id="reportGeneratedTime"></p>
+
+    <div id="summaryMetricsSection">
+        <h3>Summary Metrics</h3>
+        <ul id="summaryMetricsList"><li>Loading metrics...</li></ul>
+    </div>
+
+    <hr>
+
+    <div class="charts-grid">
+        <div class="chart-container">
+            <h4>Equity Curve</h4>
+            <canvas id="equityCurveChart"></canvas>
+        </div>
+        <div class="chart-container">
+            <h4>Exit Reasons</h4>
+            <canvas id="exitReasonsChart"></canvas>
+        </div>
+        <div class="chart-container">
+            <h4>Win/Loss Distribution</h4>
+            <canvas id="winLossChart"></canvas>
+        </div>
+        <div class="chart-container">
+            <h4>Trade Entry/Exit Times vs PnL</h4>
+            <canvas id="tradeScatterPlotChart"></canvas>
+        </div>
+        <div class="chart-container">
+            <h4>Trade Duration Distribution (Minutes)</h4>
+            <canvas id="tradeDurationHistogramChart"></canvas>
+        </div>
+        <div class="chart-container">
+            <h4>Trade PnL (Net) Distribution</h4>
+            <canvas id="tradePnlHistogramChart"></canvas>
+        </div>
+    </div>
+
+    <hr>
+
+    <div id="tradesTableSection" style="margin-top: 20px;">
+        <h3>Trade Log</h3>
+        <div class="table-container" id="detailedTradesTableContainer">
+            <p>Loading trades...</p>
+        </div>
+    </div>
+  </div>
+
+  <script>
+    let equityChartInstance = null;
+    let exitReasonsChartInstance = null;
+    let winLossChartInstance = null;
+    let tradeScatterPlotInstance = null;
+    let tradeDurationHistogramInstance = null; 
+    let tradePnlHistogramInstance = null;    
+
+    function clearAllCharts() {
+        if (equityChartInstance) equityChartInstance.destroy();
+        if (exitReasonsChartInstance) exitReasonsChartInstance.destroy();
+        if (winLossChartInstance) winLossChartInstance.destroy();
+        if (tradeScatterPlotInstance) tradeScatterPlotInstance.destroy();
+        if (tradeDurationHistogramInstance) tradeDurationHistogramInstance.destroy(); 
+        if (tradePnlHistogramInstance) tradePnlHistogramInstance.destroy();       
+        
+        equityChartInstance = null;
+        exitReasonsChartInstance = null;
+        winLossChartInstance = null;
+        tradeScatterPlotInstance = null;
+        tradeDurationHistogramInstance = null; 
+        tradePnlHistogramInstance = null;    
+
+        const chartIds = ['equityCurveChart', 'exitReasonsChart', 'winLossChart', 
+                          'tradeScatterPlotChart', 'tradeDurationHistogramChart', 'tradePnlHistogramChart']; 
+        chartIds.forEach(id => {
+            const canvas = document.getElementById(id);
+            if (canvas) {
+                const ctx = canvas.getContext('2d');
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                const parent = canvas.parentElement;
+                const noDataMsg = parent.querySelector('p.no-data-message');
+                if (noDataMsg) parent.removeChild(noDataMsg);
+            }
+        });
+    }
+
+    function createHistogramData(values, numBins = 10) {
+        if (!values || values.length === 0) return { labels: [], counts: [] };
+        const cleanValues = values.filter(v => typeof v === 'number' && !isNaN(v));
+        if (cleanValues.length === 0) return { labels: [], counts: [] };
+        let minVal = Math.min(...cleanValues);
+        let maxVal = Math.max(...cleanValues);
+        if (minVal === maxVal) {
+             return { labels: [minVal.toFixed(2)], counts: [cleanValues.length] };
+        }
+        if (maxVal <= minVal) maxVal = minVal + 1; 
+        const binSize = (maxVal - minVal) / numBins;
+        const bins = Array(numBins).fill(0);
+        const labels = [];
+        for (let i = 0; i < numBins; i++) {
+            const binStart = minVal + i * binSize;
+            const binEnd = minVal + (i + 1) * binSize;
+            labels.push(`${binStart.toFixed(2)} - ${binEnd.toFixed(2)}`);
+        }
+        labels[numBins -1] = `${(minVal + (numBins - 1) * binSize).toFixed(2)} - ${maxVal.toFixed(2)}`;
+        cleanValues.forEach(value => {
+            let binIndex = Math.floor((value - minVal) / binSize);
+            if (value === maxVal) binIndex = numBins - 1;
+            else if (binIndex >= numBins) binIndex = numBins - 1;
+            if (binIndex < 0) binIndex = 0; 
+            bins[binIndex]++;
+        });
+        return { labels, counts: bins };
+    }
+
+    async function loadAndDisplayRunDetails(mongodbDocId) {
+        document.getElementById('runDocIdDisplay').textContent = mongodbDocId || "N/A";
+        document.getElementById('reportGeneratedTime').textContent = `Report requested at: ${new Date().toLocaleString()}`;
+        
+        clearAllCharts();
+        document.getElementById('summaryMetricsList').innerHTML = '<li>Fetching detailed run data...</li>';
+        document.getElementById('detailedTradesTableContainer').innerHTML = '<p>Fetching trades...</p>';
+
+        if (!mongodbDocId) {
+            const errorMsg = "Error: No MongoDB Document ID specified in URL (expected ?doc_id=...).";
+            document.getElementById('summaryMetricsList').innerHTML = `<li style="color:red;">${errorMsg}</li>`;
+            console.error(errorMsg);
+            return;
+        }
+
+        const apiUrl = `/api/mongo/run_details/${mongodbDocId}`;
+        console.log(`Fetching detailed data from: ${apiUrl}`);
+
+        try {
+            const response = await fetch(apiUrl);
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({ "error": `Server error: ${response.status}` }));
+                throw new Error(errorData.error || `Failed to fetch run details (Status: ${response.status})`);
+            }
+            const runData = await response.json();
+
+            if (runData.error) {
+                throw new Error(runData.error);
+            }
+            if (!runData || Object.keys(runData).length === 0) {
+                throw new Error("Received empty data for the run document ID.");
+            }
+
+            console.log("Fetched Run Data for Detailed Report:", runData);
+
+            // --- Populate Summary Metrics ---
+            const summaryMetricsList = document.getElementById('summaryMetricsList');
+            summaryMetricsList.innerHTML = ''; 
+            const metricsToShow = {
+                "Strategy Name": runData.strategy_name,
+                "MongoDB Doc ID": runData._id, 
+                "Original Run ID (Pipeline)": runData.run_id, // This is the PIPELINE_RUN_ID_GLOBAL
+                "Performance Score": runData.performance_score?.toFixed(2),
+                "Total Net PnL": runData.total_pnl?.toFixed(2),
+                "Gross PnL": runData.gross_pnl?.toFixed(2), // Assuming this key exists from performance_logger
+                "Win Rate": runData.win_rate?.toFixed(2) + '%',
+                "Trade Count": runData.trade_count,
+                "Profit Factor": runData.profit_factor?.toFixed(2),
+                "Max Drawdown": runData.max_drawdown?.toFixed(2),
+                "Symbol": runData.symbol,
+                "Timeframe": runData.timeframe,
+                "Market Condition": runData.market_condition || 'N/A',
+                "Session": runData.session || 'N/A',
+                "Day": runData.day || 'N/A',
+                "Is Expiry Day": runData.is_expiry === null ? 'N/A' : (runData.is_expiry ? 'Yes' : 'No'),
+                "Volatility Status": runData.custom_data?.volatility_status_from_data || 'N/A'
+            };
+            for (const [key, value] of Object.entries(metricsToShow)) {
+                if (value !== undefined && value !== null) {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<b>${key}:</b> ${value}`;
+                    summaryMetricsList.appendChild(li);
+                }
+            }
+            if (runData.parameters_used || runData.params_used_this_run) { // Check both common names
+                const paramsToDisplay = runData.parameters_used || runData.params_used_this_run;
+                const li = document.createElement('li');
+                li.innerHTML = `<b>Parameters Used:</b> <pre style="font-size:0.9em; background:#f0f0f0; padding:5px; border-radius:3px;">${JSON.stringify(paramsToDisplay, null, 2)}</pre>`;
+                summaryMetricsList.appendChild(li);
+            }
+            if (runData.optuna_study_name) {
+                const li = document.createElement('li');
+                li.innerHTML = `<b>Optuna Study:</b> ${runData.optuna_study_name} (Trial: ${runData.optuna_trial_number || 'N/A'})`;
+                summaryMetricsList.appendChild(li);
+            }
+
+            const trades = runData.trades_details || [];
+            const equityCurvePoints = [];
+            // Use initial_capital from runData if available, else default to 0 for PnL curve
+            let currentEquity = parseFloat(runData.initial_capital || runData.performance_metrics?.initial_capital || 0); 
+            
+            if (trades.length > 0 && trades[0].EntryTime) {
+                 equityCurvePoints.push({ x: moment(trades[0].EntryTime).subtract(1, 'second').valueOf(), y: currentEquity });
+            } else if (runData.start_time_of_data) { // Fallback if you log data start time
+                 equityCurvePoints.push({ x: moment(runData.start_time_of_data).valueOf(), y: currentEquity });
+            } else { // Absolute fallback
+                 equityCurvePoints.push({ x: moment().valueOf(), y: currentEquity }); // Might not be ideal
+            }
+
+            trades.forEach(trade => {
+                currentEquity += parseFloat(trade.PnL_Net || 0);
+                if (trade.ExitTime) { 
+                     equityCurvePoints.push({ x: moment(trade.ExitTime).valueOf(), y: currentEquity });
+                }
+            });
+
+            const exitReasonsSummary = runData.custom_data?.exit_reasons_summary || {};
+            const exitReasonLabels = Object.keys(exitReasonsSummary);
+            const exitReasonCounts = Object.values(exitReasonsSummary);
+            const exitReasonColors = exitReasonLabels.map((_, index) => `hsl(${(index * 360 / Math.max(exitReasonLabels.length, 1))}, 70%, 60%)`);
+
+            const wins = trades.filter(t => parseFloat(t.PnL_Net || 0) > 0).length;
+            const losses = trades.filter(t => parseFloat(t.PnL_Net || 0) <= 0 && typeof t.PnL_Net === 'number').length;
+
+            const tradeScatterData = trades.map(trade => ({
+                x: moment(trade.EntryTime).valueOf(),
+                y: moment(trade.ExitTime).valueOf(),
+                pnl: parseFloat(trade.PnL_Net || 0)
+            }));
+
+            const tradeDurationsMinutes = trades.map(trade => {
+                if (trade.EntryTime && trade.ExitTime) {
+                    const entry = moment(trade.EntryTime);
+                    const exit = moment(trade.ExitTime);
+                    return exit.diff(entry, 'minutes');
+                }
+                return null;
+            }).filter(duration => duration !== null && duration >= 0); 
+
+            const tradePnlValues = trades.map(trade => parseFloat(trade.PnL_Net || 0))
+                                         .filter(pnl => typeof pnl === 'number' && !isNaN(pnl));
+
+            const noDataMessage = (canvasId, message) => {
+                const container = document.getElementById(canvasId)?.parentElement;
+                if (container) {
+                    const existingMsg = container.querySelector('p.no-data-message');
+                    if(existingMsg) container.removeChild(existingMsg);
+                    const p = document.createElement('p');
+                    p.textContent = message;
+                    p.className = 'no-data-message';
+                    container.appendChild(p);
+                }
+            };
+            
+            if (document.getElementById('equityCurveChart')) {
+                if (equityCurvePoints.length > 1) {
+                    const eqCtx = document.getElementById('equityCurveChart').getContext('2d');
+                    equityChartInstance = new Chart(eqCtx, {
+                        type: 'line',
+                        data: { datasets: [{ label: 'Equity (Initial + Cumulative Net PnL)', data: equityCurvePoints, borderColor: 'rgb(54, 162, 235)', tension: 0.1, fill: false, pointRadius: 2, pointHoverRadius: 5 }] },
+                        options: { responsive: true, scales: { x: { type: 'time', time: { tooltipFormat: 'll HH:mm:ss', unit: 'minute' }, title: { display: true, text: 'Time' }}, y: { title: { display: true, text: 'Equity Value' }, beginAtZero: (currentEquity === 0 && trades.length > 0) ? true : false }}, plugins: { title: { display: true, text: 'Equity Curve Over Time' }}}
+                    });
+                } else { noDataMessage('equityCurveChart', 'Not enough data for Equity Curve.'); }
+            }
+
+             if (document.getElementById('exitReasonsChart')) {
+                if (exitReasonLabels.length > 0) {
+                    const erCtx = document.getElementById('exitReasonsChart').getContext('2d');
+                    exitReasonsChartInstance = new Chart(erCtx, { 
+                        type: 'pie',
+                        data: { labels: exitReasonLabels, datasets: [{ data: exitReasonCounts, backgroundColor: exitReasonColors }] },
+                        options: { responsive: true, plugins: { title: { display: true, text: 'Distribution of Exit Reasons' } } }
+                    });
+                } else { noDataMessage('exitReasonsChart','No Exit Reason data.'); }
+            }
+
+            if (document.getElementById('winLossChart')) {
+                if (wins > 0 || losses > 0) {
+                    const wlCtx = document.getElementById('winLossChart').getContext('2d');
+                    winLossChartInstance = new Chart(wlCtx, { 
+                        type: 'bar',
+                        data: { labels: ['Wins', 'Losses'], datasets: [{ label: 'Trade Outcomes', data: [wins, losses], backgroundColor: ['rgba(75, 192, 192, 0.7)', 'rgba(255, 99, 132, 0.7)'] }] },
+                        options: { responsive: true, plugins: { title: { display: true, text: 'Win vs. Loss Trades' } }, indexAxis: 'y' }
+                    });
+                }  else { noDataMessage('winLossChart','No Win/Loss data.'); }
+            }
+
+            if (document.getElementById('tradeScatterPlotChart')) {
+                if (tradeScatterData.length > 0) {
+                    const tsCtx = document.getElementById('tradeScatterPlotChart').getContext('2d');
+                    tradeScatterPlotInstance = new Chart(tsCtx, {
+                        type: 'scatter',
+                        data: { datasets: [{ label: 'Trades (Entry vs Exit Time)', data: tradeScatterData, pointBackgroundColor: tradeScatterData.map(d => d.pnl > 0 ? 'rgba(75, 192, 192, 0.7)' : (d.pnl < 0 ? 'rgba(255, 99, 132, 0.7)' : 'rgba(201, 203, 207, 0.7)')), pointBorderColor: tradeScatterData.map(d => d.pnl > 0 ? 'rgba(75, 192, 192, 1)' : (d.pnl < 0 ? 'rgba(255, 99, 132, 1)' : 'rgba(201, 203, 207, 1)')), pointRadius: 5, pointHoverRadius: 7 }] },
+                        options: { responsive: true, scales: { x: { type: 'time', time: { tooltipFormat: 'll HH:mm:ss', unit: 'minute' }, title: { display: true, text: 'Trade Entry Time' }}, y: { type: 'time', time: { tooltipFormat: 'll HH:mm:ss', unit: 'minute' }, title: { display: true, text: 'Trade Exit Time' }}}, plugins: { title: { display: true, text: 'Trade Entry vs. Exit Times (Colored by PnL)' }, tooltip: { callbacks: { label: function(context) { const item = context.dataset.data[context.dataIndex]; return `PnL: ${item.pnl.toFixed(2)}`; }}}}}
+                    });
+                } else { noDataMessage('tradeScatterPlotChart','No trade data for Scatter Plot.'); }
+            }
+
+            const durationHistogramData = createHistogramData(tradeDurationsMinutes, 10);
+            if (document.getElementById('tradeDurationHistogramChart')) {
+                if (durationHistogramData.labels.length > 0) {
+                    const durCtx = document.getElementById('tradeDurationHistogramChart').getContext('2d');
+                    tradeDurationHistogramInstance = new Chart(durCtx, {
+                        type: 'bar',
+                        data: { labels: durationHistogramData.labels, datasets: [{ label: 'Number of Trades', data: durationHistogramData.counts, backgroundColor: 'rgba(153, 102, 255, 0.6)', borderColor: 'rgba(153, 102, 255, 1)', borderWidth: 1 }] },
+                        options: { responsive: true, scales: { y: { beginAtZero: true, title: { display: true, text: 'Number of Trades' } }, x: { title: { display: true, text: 'Trade Duration (Minutes)' } }}, plugins: { title: { display: true, text: 'Distribution of Trade Durations' } } }
+                    });
+                } else { noDataMessage('tradeDurationHistogramChart','No data for Trade Duration Histogram.'); }
+            }
+
+            const pnlHistogramData = createHistogramData(tradePnlValues, 12);
+            if (document.getElementById('tradePnlHistogramChart')) {
+                if (pnlHistogramData.labels.length > 0) {
+                    const pnlHistCtx = document.getElementById('tradePnlHistogramChart').getContext('2d');
+                    tradePnlHistogramInstance = new Chart(pnlHistCtx, { 
+                        type: 'bar',
+                        data: { labels: pnlHistogramData.labels, datasets: [{ label: 'Number of Trades', data: pnlHistogramData.counts, backgroundColor: 'rgba(255, 159, 64, 0.6)', borderColor: 'rgba(255, 159, 64, 1)', borderWidth: 1 }] }, 
+                        options: { responsive: true, scales: { y: { beginAtZero: true, title: { display: true, text: 'Number of Trades' } }, x: { title: { display: true, text: 'Net PnL per Trade' } } }, plugins: { title: { display: true, text: 'Distribution of Net PnL per Trade' } } }
+                    });
+                } else { noDataMessage('tradePnlHistogramChart','No data for PnL Histogram.'); }
+            }
+
+            const tradesTableContainer = document.getElementById('detailedTradesTableContainer');
+            if (trades.length > 0) {
+                let tableHtml = '<div class="table-container"><table><thead><tr>';
+                const headers = ["#", "Entry Time", "Exit Time", "Position", "Entry Price", "Exit Price", "PnL Net", "PnL Gross", "Exit Reason", "Strategy Name"];
+                headers.forEach(header => tableHtml += `<th>${header}</th>`);
+                tableHtml += '</tr></thead><tbody>';
+                trades.forEach((t, index) => {
+                    tableHtml += `<tr>
+                        <td>${index + 1}</td>
+                        <td>${t.EntryTime ? new Date(t.EntryTime).toLocaleString() : 'N/A'}</td>
+                        <td>${t.ExitTime ? new Date(t.ExitTime).toLocaleString() : 'N/A'}</td>
+                        <td>${t.Position || 'N/A'}</td>
+                        <td>${typeof t.EntryPrice === 'number' ? t.EntryPrice.toFixed(4) : 'N/A'}</td>
+                        <td>${typeof t.ExitPrice === 'number' ? t.ExitPrice.toFixed(4) : 'N/A'}</td>
+                        <td style="color:${(parseFloat(t.PnL_Net || 0) > 0 ? 'green' : (parseFloat(t.PnL_Net || 0) < 0 ? 'red' : 'grey'))};">
+                            ${typeof t.PnL_Net === 'number' ? t.PnL_Net.toFixed(2) : 'N/A'}
+                        </td>
+                        <td>${typeof t.PnL_Gross === 'number' ? t.PnL_Gross.toFixed(2) : 'N/A'}</td>
+                        <td>${t.ExitReason || 'N/A'}</td>
+                        <td>${t.StrategyName || runData.strategy_name || 'N/A'}</td> 
+                    </tr>`;
+                });
+                tableHtml += '</tbody></table></div>';
+                tradesTableContainer.innerHTML = tableHtml;
+            } else {
+                tradesTableContainer.innerHTML = '<p>No trades recorded for this run.</p>';
+            }
+
+        } catch (error) {
+            console.error("Error loading/processing detailed report data:", error);
+            const summaryList = document.getElementById('summaryMetricsList');
+            summaryList.innerHTML = `<li style="color:red;">Failed to load details: ${error.message}</li>`;
+            document.getElementById('detailedTradesTableContainer').innerHTML = `<p style="color:red;">Failed to load trades: ${error.message}</p>`;
+            clearAllCharts(); 
+        }
+    }
+
+    // Simplified window.onload - Focus on getting 'doc_id' from query parameter
+    window.onload = () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const runDocIdFromQuery = urlParams.get('doc_id');
+
+        document.getElementById('reportGeneratedTime').textContent = `Report requested at: ${new Date().toLocaleString()}`;
+
+        // Basic ObjectId validation for JS 
+        const ObjectIdIsValid = (id) => {
+            if (!id) return false;
+            return /^[0-9a-fA-F]{24}$/.test(id); // Checks for 24 hex characters
+        };
+
+        if (runDocIdFromQuery && ObjectIdIsValid(runDocIdFromQuery)) { 
+            console.log("Detailed Report: Found valid 'doc_id' in URL query parameters:", runDocIdFromQuery);
+            document.getElementById('runDocIdDisplay').textContent = runDocIdFromQuery;
+            loadAndDisplayRunDetails(runDocIdFromQuery);
+        } else {
+            let errorMsg = "CRITICAL ERROR: No valid 'doc_id' (MongoDB Document ID) found in the URL query parameters for this detailed report. Please ensure links to this page include '?doc_id=xxxxxxxxxxxxxxxxxxxxxxxx'.";
+            if (runDocIdFromQuery && !ObjectIdIsValid(runDocIdFromQuery)) {
+                 errorMsg = `Error: The provided 'doc_id' (${runDocIdFromQuery}) in the URL is not a valid MongoDB ObjectId format.`;
+            }
+            
+            console.error(errorMsg);
+            document.getElementById('summaryMetricsList').innerHTML = `<li style="color:red;">${errorMsg}</li>`;
+            document.getElementById('runDocIdDisplay').textContent = runDocIdFromQuery || "MISSING/INVALID";
+            document.getElementById('detailedTradesTableContainer').innerHTML = `<p style="color:red;">Report cannot be loaded.</p>`;
+            if (typeof clearAllCharts === "function") clearAllCharts(); 
+        }
+    };
+  </script>
+</body>
+</html>

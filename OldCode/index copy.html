@@ -1,0 +1,156 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Trading Bot Dashboard</title>
+    <style>
+    body { font-family: Arial, sans-serif; background: #f5f5f5; color: #333; }
+    .container { max-width: 1100px; margin: 20px auto; padding: 20px; background: #fff; /* Wider container */
+                 border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    h2,h3 { color: #555; margin-top: 0; }
+    form { margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+    form label { display: inline-block; width: 140px; font-weight: bold; margin-bottom: 8px; }
+    form select, form input[type=number], form input[type=date], form input[type=text],
+    form button { margin-bottom: 10px; padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; vertical-align: middle; }
+    form select { width: 220px; }
+    form input[type=number] { width: 80px; }
+    form input[type=date], form input[type=text] { width: 180px; }
+    form button { background: #4CAF50; color: #fff; cursor: pointer; font-weight: bold; }
+    form button:hover { background: #45a049; }
+    form button:disabled { background: #ccc; cursor: not-allowed; }
+    #analytics { margin-top: 20px; background: #f9f9f9; padding: 15px; border-radius: 4px; }
+    #analytics p { margin: 8px 0; }
+    #analytics strong { display: inline-block; width: 140px; }
+    #trade-details { margin-top: 20px; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.9em; }
+    th, td { padding: 10px; border-bottom: 1px solid #eee; white-space: nowrap; text-align: left; }
+    th { background: #e9e9e9; font-weight: bold; }
+    tr:hover { background: #f1f1f1; }
+    .profit { color: green; font-weight: bold; }
+    .loss   { color: red;   font-weight: bold; }
+    .neutral{ color: #555;  font-weight: normal; }
+    .dir-buy { color: blue; font-weight: bold; } /* Style for BUY */
+    .dir-sell { color: purple; font-weight: bold; } /* Style for SELL */
+    #status-message { margin-top: 15px; font-weight: bold; min-height: 1.2em; }
+    </style>
+</head>
+<body>
+<div class="container">
+  <h2>Trading Bot Dashboard</h2>
+
+  <form id="botForm">
+      <label>Mode:</label><select name="mode"><option value="simulator" selected>Simulator</option><option value="live" disabled>Live</option></select><br>
+      <label>Strategy:</label><select name="strategy"><option value="ema">EMA Crossover</option><option value="rsi_macd">RSI+MACD</option><option value="alphatrend">AlphaTrend</option></select><br>
+      <label>Data Source:</label><select name="source"><option value="offline" selected>Offline CSV</option><option value="online">Online (Angel One)</option></select><br>
+      <label>Exchange:</label><select name="exchange"><option value="NSE" selected>NSE</option><option value="BSE">BSE</option><option value="NFO">NFO</option><option value="MCX">MCX</option><option value="CDS">CDS</option></select><br>
+      <label>Symbol/Ticker:</label><input type="text" name="ticker" value="NIFTY 50" placeholder="e.g. NIFTY 50, RELIANCE"><br>
+      <label>Interval:</label><select name="interval"><option value="1minute">1 Min</option><option value="3minute">3 Min</option><option value="5minute">5 Min</option><option value="10minute">10 Min</option><option value="15minute">15 Min</option><option value="30minute">30 Min</option><option value="1hour">1 Hour</option><option value="1day">1 Day</option></select><br>
+      <label>Start Date:</label><input type="date" name="start_date"><br>
+      <label>End Date:</label><input type="date" name="end_date"><br>
+      <label>Stop Loss %:</label><input type="number" name="sl_pct" value="1.0" step="0.1" min="0"><br>
+      <label>Trailing SL %:</label><input type="number" name="trail_pct" value="0.5" step="0.1" min="0"><br>
+      <button type="submit" id="startButton">Start</button>
+      <span id="loadingIndicator" style="display:none;margin-left:10px;">⏳ Running…</span>
+  </form>
+
+  <div id="status-message"></div>
+  <div id="analytics">
+      <h3>Summary:</h3>
+       <p><strong>PnL:</strong> <span id="pnl" class="neutral">0.00</span></p>
+       <p><strong>Trades:</strong> <span id="trades">0</span></p>
+       <p><strong>Status:</strong> <span id="status">Not started</span></p>
+  </div>
+
+  <div id="trade-details">
+    <h3>Trade Details:</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Direction</th> <th>Entry Date</th><th>Entry Time</th>
+          <th>Exit Date</th> <th>Exit Time</th>
+          <th>Entry Price</th><th>Exit Price</th>
+          <th>Reason</th><th>Profit</th><th>Profit %</th> </tr>
+      </thead>
+      <tbody id="trades-table">
+        <tr><td colspan="10" style="text-align:center;color:#666">— Select parameters and start simulation —</td></tr> </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+const form = document.getElementById('botForm'), /* ... (get other elements as before) ... */
+      startButton=document.getElementById('startButton'), loadingIndicator=document.getElementById('loadingIndicator'),
+      statusMessage=document.getElementById('status-message'), pnlEl=document.getElementById('pnl'),
+      tradesEl=document.getElementById('trades'), statusEl=document.getElementById('status'),
+      tableBody=document.getElementById('trades-table');
+
+form.addEventListener('submit', async e => {
+  e.preventDefault();
+  // --- Reset UI ---
+  startButton.disabled = true; loadingIndicator.style.display = 'inline'; statusMessage.textContent = 'Running…';
+  pnlEl.textContent='0.00'; pnlEl.className='neutral'; tradesEl.textContent='0'; statusEl.textContent = '…';
+  tableBody.innerHTML = `<tr><td colspan="10" style="text-align: center;">Running...</td></tr>`; // Updated colspan
+
+  // --- Gather Config ---
+  const data = Object.fromEntries(new FormData(form).entries());
+  data.sl_pct = parseFloat(data.sl_pct) || 1.0; data.trail_pct = parseFloat(data.trail_pct) || 0.5;
+  if(!data.start_date) delete data.start_date; if(!data.end_date) delete data.end_date;
+  if(!data.ticker) data.ticker = 'NIFTY 50'; if(!data.exchange) data.exchange = 'NSE';
+  // Add commission/slippage if inputs exist
+  // data.commission_per_trade = parseFloat(document.getElementById('commission_input_id')?.value || 0.0);
+  // data.slippage_per_trade = parseFloat(document.getElementById('slippage_input_id')?.value || 0.0);
+
+
+  console.log("→ Sending config", data);
+  try {
+    // --- Fetch Results ---
+    const resp = await fetch('/start', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(data) });
+    const respText = await resp.text(); // Read body once
+    if(!resp.ok) { let err = respText; try {err = JSON.parse(err).error || err;} catch(e){} throw new Error(`HTTP ${resp.status}: ${err}`); }
+    const js = JSON.parse(respText); // Parse successful response
+
+    // --- Update UI ---
+    statusMessage.textContent = '✅ Done'; statusMessage.style.color = 'green';
+    pnlEl.textContent = (js.pnl ?? 0.0).toFixed(2); pnlEl.className = js.pnl>0?'profit':js.pnl<0?'loss':'neutral';
+    tradesEl.textContent = js.trades ?? 0; statusEl.textContent = js.status ?? 'Unknown';
+
+    // --- Fill Table ---
+    tableBody.innerHTML = ""; // Clear previous/running message
+    if(js.trades_details?.length){
+      js.trades_details.forEach(t=>{
+        const row = document.createElement('tr');
+        const profitClass = t.profit == null ? '' : (t.profit >= 0 ? 'profit' : 'loss');
+        const directionClass = t.direction === 'BUY' ? 'dir-buy' : (t.direction === 'SELL' ? 'dir-sell' : ''); // Class for direction
+        // --- Formatting helpers ---
+        const formatNum = (v,d=2,s='') => (v!=null && typeof v==='number') ? v.toFixed(d)+s : '-';
+        const formatDate = (ts) => { try { if(!ts || typeof ts !== 'string' || ts.startsWith('End')) return '-'; const d=new Date(ts); return isNaN(d.getTime())?'-':d.toLocaleDateString('en-GB'); } catch(e){ return '-'; }};
+        const formatTime = (ts) => { try { if(!ts || typeof ts !== 'string' || ts.startsWith('End')) return '-'; const d=new Date(ts); return isNaN(d.getTime())?'-':d.toLocaleTimeString('en-GB',{hour12:false}); } catch(e){ return '-'; }};
+        // -------------------------
+        row.innerHTML = `
+          <td class="${directionClass}">${t.direction || '-'}</td> <td>${formatDate(t.entry_time)}</td>
+          <td>${formatTime(t.entry_time)}</td>
+          <td>${formatDate(t.exit_time)}</td>
+          <td>${formatTime(t.exit_time)}</td>
+          <td>${formatNum(t.entry_price)}</td>
+          <td>${formatNum(t.exit_price)}</td>
+          <td>${t.exit_reason||'-'}</td>
+          <td class="${profitClass}">${formatNum(t.profit)}</td>
+          <td class="${profitClass}">${formatNum(t.profit_pct, 2, '%')}</td>
+        `;
+        tableBody.appendChild(row);
+      });
+    } else {
+      tableBody.innerHTML = `<tr><td colspan="10" style="text-align:center;color:#666">No trades executed</td></tr>`; // Updated colspan
+    }
+  }
+  catch(err){
+    console.error("❌ /start error:", err); statusMessage.textContent = `❌ Error: ${err.message}`; statusMessage.style.color = 'red';
+    tableBody.innerHTML = `<tr><td colspan="10" style="color:red;text-align:center">Simulation failed.</td></tr>`; // Updated colspan
+  }
+  finally { startButton.disabled = false; loadingIndicator.style.display = 'none'; }
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,128 @@
+//@version=6
+strategy("AI-Powered Trading Signal v6 (No Trail)", overlay=true)
+
+// === Input Parameters ===
+// Indicator Lengths
+fastLength = input.int(12, title="Fast EMA Length")
+slowLength = input.int(26, title="Slow EMA Length")
+signalLength = input.int(9, title="MACD Signal Length")
+rsiPeriod = input.int(14, title="RSI Period")
+ema9Length = input.int(9, title="9 EMA Length")
+ema14Length = input.int(14, title="14 EMA Length") // Note: ema14 currently calculated but not used in logic
+ema50Length = input.int(50, title="50 EMA Length")
+dmiLen = input.int(14, title="DMI Length")
+adxSmooth = input.int(14, title="ADX Smoothing")
+atrLength = input.int(14, title="ATR Length for SL/TP")
+
+// AI Confidence Parameters
+w_trend = input.float(1.0, "Trend Weight (AI Conf)")
+w_rsi = input.float(1.0, "RSI Weight (AI Conf)")
+aiBuyThreshold = input.float(0.2, title="AI Buy Threshold")
+aiSellThreshold = input.float(-0.2, title="AI Sell Threshold")
+
+// Exit Condition Parameters
+rsiExitLong = input.int(45, title="RSI Long Exit Threshold (<)")
+rsiExitShort = input.int(60, title="RSI Short Exit Threshold (>)")
+
+// Trade Management Parameters
+slMultiplier = input.float(1.5, title="Stop Loss ATR Multiplier")
+tpMultiplier = input.float(2.0, title="Take Profit ATR Multiplier")
+adxThreshold = input.int(20, title="ADX Trend Threshold")
+
+// === Indicator Calculations ===
+// Moving Averages
+fastEMA = ta.ema(close, fastLength)
+slowEMA = ta.ema(close, slowLength)
+ema9 = ta.ema(close, ema9Length)
+ema14 = ta.ema(close, ema14Length)
+ema50 = ta.ema(close, ema50Length)
+
+// MACD Calculation
+macd = fastEMA - slowEMA
+signal = ta.ema(macd, signalLength)
+hist = macd - signal // MACD Histogram
+
+// RSI Calculation
+rsi = ta.rsi(close, rsiPeriod)
+
+// ATR Calculation
+atr = ta.atr(atrLength)
+
+// AI Confidence Calculation
+trendFactor = ta.sma(hist, 5) // Smoothed MACD Histogram
+rsiFactor = (rsi - 50) / 10  // Normalized RSI
+ai_confidence = (w_trend * trendFactor + w_rsi * rsiFactor) / (w_trend + w_rsi) // Weighted average
+ai_buy_signal = ai_confidence > aiBuyThreshold
+ai_sell_signal = ai_confidence < aiSellThreshold
+
+// ADX Calculation
+[diplus, diminus, adxValue] = ta.dmi(dmiLen, adxSmooth)
+isTrending = adxValue > adxThreshold
+
+// Calculate MACD Crossover/Crossunder states ONCE per bar <<<< Correction Applied Here >>>>
+macdCrossover = ta.crossover(macd, signal)
+macdCrossunder = ta.crossunder(macd, signal)
+
+// === Trading Conditions ===
+// Entry Conditions - Use the variables <<<< Correction Applied Here >>>>
+longCondition = macdCrossover and ai_buy_signal and close > ema9 and close > ema50 and isTrending
+shortCondition = macdCrossunder and ai_sell_signal and close < ema9 and close < ema50 and isTrending
+
+// Conditional Exit Triggers - Use the variables <<<< Correction Applied Here >>>>
+longExitCondition = (rsi < rsiExitLong and close < ema9) or macdCrossunder
+shortExitCondition = (rsi > rsiExitShort and close > ema9) or macdCrossover
+
+// === Strategy Execution ===
+// Entries
+if (longCondition and strategy.opentrades == 0) // Use strategy.opentrades in v6 to check if flat
+    strategy.entry("Long", strategy.long)
+    label.new(bar_index, low, "BUY", color=color.green, textcolor=color.white, style=label.style_label_down, size=size.small)
+
+if (shortCondition and strategy.opentrades == 0) // Use strategy.opentrades in v6 to check if flat
+    strategy.entry("Short", strategy.short)
+    label.new(bar_index, high, "SELL", color=color.red, textcolor=color.white, style=label.style_label_up, size=size.small)
+
+// Stop Loss and Take Profit Management (Fixed Only)
+if (strategy.opentrades != 0) // Check if position is active using strategy.opentrades
+    // Determine SL/TP levels based on average entry price
+    entryPrice = strategy.opentrades.entry_price(0) // Get entry price of the first open trade
+
+    // Long Position Management
+    if (strategy.opentrades.size(0) > 0) // Check size of the first open trade
+        stopLossLevel = entryPrice - atr * slMultiplier
+        takeProfitLevel = entryPrice + atr * tpMultiplier
+        // Always set fixed SL and TP
+        strategy.exit("L SL/TP", "Long", stop=stopLossLevel, limit=takeProfitLevel)
+
+    // Short Position Management
+    if (strategy.opentrades.size(0) < 0) // Check size of the first open trade
+        stopLossLevel = entryPrice + atr * slMultiplier
+        takeProfitLevel = entryPrice - atr * tpMultiplier
+        // Always set fixed SL and TP
+        strategy.exit("S SL/TP", "Short", stop=stopLossLevel, limit=takeProfitLevel)
+
+
+// Conditional Exits (Using strategy.close) - Check against the trade ID used in strategy.entry
+if (strategy.opentrades.size(0) > 0 and longExitCondition) // Check size of the first open trade
+    strategy.close("Long", comment="Exit Long Cond") // Closes the trade with ID "Long"
+
+if (strategy.opentrades.size(0) < 0 and shortExitCondition) // Check size of the first open trade
+    strategy.close("Short", comment="Exit Short Cond") // Closes the trade with ID "Short"
+
+
+// === Plotting ===
+// EMAs
+plot(ema9, color=color.yellow, title="9 EMA")
+plot(ema14, color=color.new(color.orange, 50), title="14 EMA") // Dimmed as not used in logic
+plot(ema50, color=color.white, title="50 EMA")
+// MACD
+plot(macd, color=color.green, title="MACD Line")
+plot(signal, color=color.orange, title="MACD Signal")
+// AI Confidence
+plot(ai_confidence, color=color.purple, title="AI Confidence")
+hline(aiBuyThreshold, "AI Buy Threshold", color=color.gray, linestyle=hline.style_dashed)
+hline(aiSellThreshold, "AI Sell Threshold", color=color.gray, linestyle=hline.style_dashed)
+hline(0, "Zero Line", color=color.gray)
+// Other Indicators (Plot in separate pane in indicator settings if desired)
+// plot(rsi, color=color.aqua, title="RSI")
+// plot(adxValue, color=color.blue, title="ADX")

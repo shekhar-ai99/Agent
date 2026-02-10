@@ -1,0 +1,305 @@
+// © Trading Legend
+//@version=5
+indicator("TradingLegend RangeLevels", overlay=true, max_lines_count=500, max_labels_count=500)
+
+// Input Parameters for multiplying factor and ratio
+
+rangeAnchorIn = input.string(title="Timeframe‏  ‏  ‏  ‏", defval="Daily", options=["Auto", "Daily", "Weekly", "Monthly", "Quarterly", "Yearly"], inline="Factor")
+maxHistoricalRangeIn = input.int(title="‏  ‏  ‏  ‏  ‏  ‏History", defval=10, minval=1, maxval=200, inline="Factor", display = display.data_window)
+
+rangeFactor  = input.float(title="Range Factor", defval=3.07, minval=1.000, maxval=9.999, step=0.010, inline = "Range")
+splitRangeIn = input.string(title="‏  ‏  ‏  ‏  ‏  ‏  ‏Range ", defval="Full", options=["Full", "Half", "One Third", "Quarter"], inline = "Range")
+
+//isDailyBasedInput = input.bool(title="Use Daily-based Values", defval=true, display = display.data_window, tooltip="When this option is unchecked, Pivot Points will use intraday data while calculating on intraday charts. If Extended Hours are displayed on the chart, they will be taken into account during the pivot level calculation. If intraday OHLC values are different from daily-based values (normal for stocks), the pivot levels will also differ.")
+lineStyle = input.string("Dotted", "‏  ‏  ‏  Style‏  ‏  ‏  ‏  ‏  ‏  ‏  ‏  ‏  ‏", options=["Dotted", "Dashed", "Line"], inline="style", display = display.data_window)
+linewidthInput = input.int(title="‏  ‏  ‏  ‏  ‏  ‏  ‏Wdth‏  ‏", defval=1, minval=1, maxval=100, inline = "style",  display = display.data_window)
+showLabelsInput = input.bool(title="Show Labels‏  ‏  ‏  ‏  ‏  ‏", defval=true, inline="show", display = display.data_window)
+showPricesInput = input.bool(title="Show Prices‏  ‏  ‏  ‏  ‏  ‏", defval=false, inline="show", display = display.data_window)
+positionLabelsInput = input.string("Left", " ", options=["Left", "Right"], inline="show",  display = display.data_window)
+
+colorP0=color.rgb(200, 250, 200)
+colorS1=color.rgb(185, 250, 185)
+colorS2=color.rgb(170, 250, 170)
+colorS3=color.rgb(155, 250, 155)
+colorS4=color.rgb(140, 250, 140)
+colorS5=color.rgb(125, 250, 125)
+colorS6=color.rgb(110, 250, 110)
+colorS7=color.rgb(095, 250, 095)
+colorS8=color.rgb(080, 225, 080)
+colorS0=color.rgb(065, 175, 065)
+colorS9=color.rgb(050, 200, 050)
+colorR1=color.rgb(255, 175, 175)
+colorR2=color.rgb(255, 160, 160)
+colorR3=color.rgb(255, 145, 145)
+colorR4=color.rgb(255, 130, 130)
+colorR5=color.rgb(255, 115, 115)
+colorR6=color.rgb(225, 100, 100)
+colorR7=color.rgb(200, 085, 085)
+colorR8=color.rgb(175, 070, 070)
+colorR9=color.rgb(175, 055, 055)
+colorR0=color.rgb(255, 040, 040)
+
+pColorInput = input.color(colorP0, "O‏  ‏  ‏", inline="L1", display = display.data_window)
+pShowInput = input.bool(true, "", inline="L1", display = display.data_window)
+s1ColorInput = input.color(colorS1, "‏  ‏  ‏  ‏  ‏  ‏  ‏  ‏S1", inline="L1" , display = display.data_window)
+s1ShowInput = input.bool(true, "", inline="L1", display = display.data_window)
+r1ColorInput = input.color(colorR1, "‏  ‏  ‏  ‏  ‏  ‏  ‏  ‏R1", inline="L1", display = display.data_window)
+r1ShowInput = input.bool(true, "", inline="L1", display = display.data_window)
+
+s2ColorInput = input.color(colorS2, "‏S2", inline="L2" , display = display.data_window)
+s2ShowInput = input.bool(true, "", inline="L2", display = display.data_window)
+s3ColorInput = input.color(colorS3, "‏  ‏  ‏  ‏  ‏  ‏  ‏  ‏S3", inline="L2" , display = display.data_window)
+s3ShowInput = input.bool(true, "", inline="L2", display = display.data_window)
+s4ColorInput = input.color(colorS4, "‏  ‏  ‏  ‏  ‏  ‏  ‏  ‏S4", inline="L2" , display = display.data_window)
+s4ShowInput = input.bool(true, "", inline="L2", display = display.data_window)
+
+r2ColorInput = input.color(colorR2, "‏R2", inline="L3", display = display.data_window)
+r2ShowInput = input.bool(true, "", inline="L3", display = display.data_window)
+r3ColorInput = input.color(colorR3, "‏  ‏  ‏  ‏  ‏  ‏  ‏  ‏R3", inline="L3", display = display.data_window)
+r3ShowInput = input.bool(true, "", inline="L3", display = display.data_window)
+r4ColorInput = input.color(colorR4, "‏  ‏  ‏  ‏  ‏  ‏  ‏  ‏R4", inline="L3", display = display.data_window)
+r4ShowInput = input.bool(true, "", inline="L3", display = display.data_window)
+
+s5ColorInput = input.color(colorS5, "‏S5", inline="L4" , display = display.data_window)
+s5ShowInput = input.bool(false, "", inline="L4", display = display.data_window)
+s6ColorInput = input.color(colorS6, "‏  ‏  ‏  ‏  ‏  ‏  ‏  ‏S6", inline="L4" , display = display.data_window)
+s6ShowInput = input.bool(false, "", inline="L4", display = display.data_window)
+s7ColorInput = input.color(colorS7, "‏  ‏  ‏  ‏  ‏  ‏  ‏  ‏S7", inline="L4" , display = display.data_window)
+s7ShowInput = input.bool(false, "", inline="L4", display = display.data_window)
+
+r5ColorInput = input.color(colorR5, "‏R5", inline="L5", display = display.data_window)
+r5ShowInput = input.bool(false, "", inline="L5", display = display.data_window)
+r6ColorInput = input.color(colorR6, "‏  ‏  ‏  ‏  ‏  ‏  ‏  ‏R6", inline="L5", display = display.data_window)
+r6ShowInput = input.bool(false, "", inline="L5", display = display.data_window)
+r7ColorInput = input.color(colorR7, "‏  ‏  ‏  ‏  ‏  ‏  ‏  ‏R7", inline="L5", display = display.data_window)
+r7ShowInput = input.bool(false, "", inline="L5", display = display.data_window)
+
+s8ColorInput = input.color(colorS5, "‏S8", inline="L6" , display = display.data_window)
+s8ShowInput = input.bool(false, "", inline="L6", display = display.data_window)
+s9ColorInput = input.color(colorS6, "‏  ‏  ‏  ‏  ‏  ‏  ‏  ‏S9", inline="L6" , display = display.data_window)
+s9ShowInput = input.bool(false, "", inline="L6", display = display.data_window)
+s0ColorInput = input.color(colorS7, "‏  ‏  ‏  ‏  ‏  ‏  ‏  ‏S0", inline="L6" , display = display.data_window)
+s0ShowInput = input.bool(false, "", inline="L6", display = display.data_window)
+
+r8ColorInput = input.color(colorR5, "‏R8", inline="L7", display = display.data_window)
+r8ShowInput = input.bool(false, "", inline="L7", display = display.data_window)
+r9ColorInput = input.color(colorR6, "‏  ‏  ‏  ‏  ‏  ‏  ‏  ‏R9", inline="L7", display = display.data_window)
+r9ShowInput = input.bool(false, "", inline="L7", display = display.data_window)
+r0ColorInput = input.color(colorR7, "‏  ‏  ‏  ‏  ‏  ‏  ‏  ‏R0", inline="L7", display = display.data_window)
+r0ShowInput = input.bool(false, "", inline="L7", display = display.data_window)
+
+
+autoAnchor = switch
+    timeframe.isintraday => timeframe.multiplier <= 15 ? "1D" : "1W"
+    timeframe.isdaily    => "1M"
+    => "12M"
+
+rangeTimeframe = switch rangeAnchorIn
+    "Auto"      => autoAnchor
+    "Daily"     => "1D"
+    "Weekly"    => "1W"
+    "Monthly"   => "1M"
+    "Quarterly" => "3M"
+    "Yearly"    => "12M"
+    => "12M"
+
+//@variable The number of years in the selected Pivot period
+rangeYearMultiplier = switch rangeAnchorIn
+    "Biyearly"       => 2
+    "Triyearly"      => 3
+    "Quinquennially" => 5
+    "Decennially"    => 10
+    => 1
+
+// numOfRangeLevels = switch splitRangeIn
+//     "Full Range" => 9
+//     "Half Range" => 13
+//     "One Third"  => 17
+//     "One Fourth" => 21
+
+range_levels(para_splitRange, para_timeFrameChange) =>
+    // Calculate earlier day's candle length
+    earlierHigh = request.security(syminfo.tickerid, rangeTimeframe, high[1], gaps = barmerge.gaps_off, lookahead=barmerge.lookahead_on)
+    earlierLow = request.security(syminfo.tickerid, rangeTimeframe, low[1], gaps = barmerge.gaps_off, lookahead=barmerge.lookahead_on)
+    earlierCandleLength = earlierHigh - earlierLow
+
+    // Calculate today's Range based earlier day's full Range 
+    setupRange = earlierCandleLength / rangeFactor 
+
+    // Apply DayOfWeek wise correction in Range
+    //if timeframe.isintraday
+    //    earlierDayOfWeek = dayofweek(request.security(syminfo.tickerid, "D", time[1], gaps = barmerge.gaps_off, lookahead=barmerge.lookahead_on))
+    //    setupRange := setupRange + array.get(dayAdjustments, earlierDayOfWeek)
+
+    // Convert to small range dividing by rangeSplit.
+    smallRange = switch para_splitRange
+        "Full"       => 1
+        "Half"       => 2
+        "One Third"  => 3
+        "Quarter"    => 4
+
+    setupRange := setupRange / smallRange
+
+    // Get current day's open value and calculate support resistance levels
+    todayOpen = request.security(syminfo.tickerid, rangeTimeframe, open, gaps = barmerge.gaps_off, lookahead=barmerge.lookahead_on)
+
+    S1 = todayOpen - setupRange
+    S2 = S1 - setupRange
+    S3 = S2 - setupRange
+    S4 = S3 - setupRange
+    S5 = S4 - setupRange
+    S6 = S5 - setupRange
+    S7 = S6 - setupRange
+    S8 = S7 - setupRange
+    S9 = S8 - setupRange
+    S0 = S9 - setupRange
+
+    R1 = todayOpen + setupRange
+    R2 = R1 + setupRange
+    R3 = R2 + setupRange
+    R4 = R3 + setupRange
+    R5 = R4 + setupRange
+    R6 = R5 + setupRange
+    R7 = R6 + setupRange
+    R8 = R7 + setupRange
+    R9 = R8 + setupRange
+    R0 = R9 + setupRange
+    
+    rangeLevelPoints = array.new_float(21)
+    array.set(rangeLevelPoints, 0, todayOpen)
+    array.set(rangeLevelPoints, 1, R1)
+    array.set(rangeLevelPoints, 2, S1)
+    array.set(rangeLevelPoints, 3, R2)
+    array.set(rangeLevelPoints, 4, S2)
+    array.set(rangeLevelPoints, 5, R3)
+    array.set(rangeLevelPoints, 6, S3)
+    array.set(rangeLevelPoints, 7, R4)
+    array.set(rangeLevelPoints, 8, S4)
+    array.set(rangeLevelPoints, 9, R5)
+    array.set(rangeLevelPoints, 10, S5)
+    array.set(rangeLevelPoints, 11, R6)
+    array.set(rangeLevelPoints, 12, S6)
+    array.set(rangeLevelPoints, 13, R7)
+    array.set(rangeLevelPoints, 14, S7)
+    array.set(rangeLevelPoints, 15, R8)
+    array.set(rangeLevelPoints, 16, S8)
+    array.set(rangeLevelPoints, 17, R9)
+    array.set(rangeLevelPoints, 18, S9)
+    array.set(rangeLevelPoints, 19, R0)
+    array.set(rangeLevelPoints, 20, S0)
+   
+    rangeLevelPoints
+
+//  Create global variables 
+
+var bool isDailyBasedInput = true
+
+type graphicSettings
+    string levelName
+    color levelColor
+    bool showLevel
+
+var graphicSettingsArray = array.from(
+      graphicSettings.new("O0", pColorInput, pShowInput),
+      graphicSettings.new("R1", r1ColorInput, r1ShowInput), graphicSettings.new("S1", s1ColorInput, s1ShowInput),
+      graphicSettings.new("R2", r2ColorInput, r2ShowInput), graphicSettings.new("S2", s2ColorInput, s2ShowInput),
+      graphicSettings.new("R3", r3ColorInput, r3ShowInput), graphicSettings.new("S3", s3ColorInput, s3ShowInput),
+      graphicSettings.new("R4", r4ColorInput, r4ShowInput), graphicSettings.new("S4", s4ColorInput, s4ShowInput),
+      graphicSettings.new("R5", r5ColorInput, r5ShowInput), graphicSettings.new("S5", s5ColorInput, s5ShowInput),
+      graphicSettings.new("R6", r6ColorInput, r6ShowInput), graphicSettings.new("S6", s6ColorInput, s6ShowInput),
+      graphicSettings.new("R7", r7ColorInput, r7ShowInput), graphicSettings.new("S7", s7ColorInput, s7ShowInput),
+      graphicSettings.new("R8", r8ColorInput, r8ShowInput), graphicSettings.new("S8", s8ColorInput, s8ShowInput),
+      graphicSettings.new("R9", r9ColorInput, r9ShowInput), graphicSettings.new("S9", s9ColorInput, s9ShowInput),
+      graphicSettings.new("R0", r0ColorInput, r0ShowInput), graphicSettings.new("S0", s0ColorInput, s0ShowInput))
+
+type rangeGraphic
+    line rangeLine
+    label rangeLabel
+
+method delete(rangeGraphic graphic) =>
+    graphic.rangeLine.delete()
+    graphic.rangeLabel.delete()
+
+var drawnGraphics = matrix.new<rangeGraphic>()
+
+localRangeTimeframeChange = timeframe.change(rangeTimeframe) and year % rangeYearMultiplier == 0
+securityRangeTimeframeChange = timeframe.change(timeframe.period) and year % rangeYearMultiplier == 0
+
+rangeTimeframeChangeCounter(condition) => 
+    var count = 0
+    if condition and bar_index > 0
+        count += 1
+    count
+    
+localRanges = range_levels(splitRangeIn, localRangeTimeframeChange)
+securityRanges = range_levels(splitRangeIn, securityRangeTimeframeChange)
+
+securityTimeframe = timeframe.isintraday ? "1D" : timeframe.period
+[securityranges, securityrangeCounter] = request.security(syminfo.tickerid, rangeTimeframe, [securityRanges, rangeTimeframeChangeCounter(securityRangeTimeframeChange)], lookahead = barmerge.lookahead_on)
+rangePointsArray = isDailyBasedInput ? securityRanges : localRanges
+
+//@function Sets the ending points of the currently active ranges to `endTime`.
+affixOldranges(endTime) =>
+    if drawnGraphics.rows() > 0
+        lastGraphics = drawnGraphics.row(drawnGraphics.rows() - 1)
+
+        for graphic in lastGraphics
+            graphic.rangeLine.set_x2(endTime)
+            if positionLabelsInput == "Right"
+                graphic.rangeLabel.set_x(endTime)
+
+//@function Draws range lines and labels from `startTime` to the approximate end of the period.
+drawNewranges(startTime) =>
+    
+    newGraphics = array.new<rangeGraphic>()
+
+    for [index, coord] in rangePointsArray
+        levelSettings = graphicSettingsArray.get(index)
+        levelStyle = switch lineStyle
+            "Dotted" => line.style_dotted
+            "Dashed" => line.style_dashed
+            "Line"   => line.style_solid
+
+        if not na(coord) and levelSettings.showLevel
+            lineEndTime = startTime + timeframe.in_seconds(rangeTimeframe) * 1000 * rangeYearMultiplier
+            rangeLine = line.new(startTime, coord, lineEndTime, coord, xloc = xloc.bar_time, color=levelSettings.levelColor, width=linewidthInput, style=levelStyle)
+            rangeLabel = label.new(x = positionLabelsInput == "Left" ? startTime : lineEndTime,
+                               y = coord,
+                               text = (showLabelsInput ? levelSettings.levelName + " " : "") + (showPricesInput ? "(" + str.tostring(coord, format.mintick) + ")" : ""),
+                               style = positionLabelsInput == "Left" ? label.style_label_right : label.style_label_left,
+                               textcolor = levelSettings.levelColor,
+                               color = #00000000,
+                               xloc=xloc.bar_time)
+            
+            newGraphics.push(rangeGraphic.new(rangeLine, rangeLabel))
+    
+    drawnGraphics.add_row(array_id = newGraphics)
+
+    if drawnGraphics.rows() > maxHistoricalRangeIn
+        oldGraphics = drawnGraphics.remove_row(0)
+        
+        for graphic in oldGraphics
+            graphic.delete()
+
+localrangeDrawConditionStatic = not isDailyBasedInput and localRangeTimeframeChange
+securityrangeDrawConditionStatic = isDailyBasedInput and securityrangeCounter != securityrangeCounter[1]
+
+var isMultiYearly = array.from("Biyearly", "Triyearly", "Quinquennially", "Decennially").includes(rangeAnchorIn)
+localrangeDrawConditionDeveloping = not isDailyBasedInput and time_close == time_close(rangeTimeframe) and not isMultiYearly 
+securityrangeDrawConditionDeveloping = false
+
+if (securityrangeDrawConditionStatic or localrangeDrawConditionStatic)
+    affixOldranges(time)
+    drawNewranges(time)
+
+// If possible, draw ranges from the beginning of the chart if none were found
+var FIRST_BAR_TIME = time
+if (barstate.islastconfirmedhistory and drawnGraphics.columns() == 0)
+
+    if not na(securityranges) and securityrangeCounter > 0
+        if isDailyBasedInput
+            drawNewranges(FIRST_BAR_TIME)
+        else 
+            runtime.error("Not enough intraday data to calculate range Points. Lower the ranges Timeframe or turn on the 'Use Daily-based Values' option in the indicator settings.")
+    else
+        runtime.error("Not enough data to calculate range Points. Lower the ranges Timeframe in the indicator settings.")

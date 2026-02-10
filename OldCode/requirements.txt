@@ -1,0 +1,11 @@
+flask
+pandas
+numpy
+python-dotenv
+yfinance
+pandas_ta @ git+https://github.com/twopirllc/pandas-ta.git@development
+smartapi-python
+pyotp
+logzero
+websocket-client==1.8.0
+requests
