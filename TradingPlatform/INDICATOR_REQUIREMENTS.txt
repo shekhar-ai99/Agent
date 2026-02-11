@@ -1,0 +1,200 @@
+================================================================================
+INDICATOR REQUIREMENTS FOR ALL GENERIC STRATEGIES
+================================================================================
+
+ALL UNIQUE INDICATORS:
+--------------------------------------------------------------------------------
+  • adx_14
+  • adx_{self.adx_period}
+  • atr_14
+  • bb_lower
+  • bb_upper
+  • ema_13
+  • ema_20
+  • ema_21
+  • ema_34
+  • ema_5
+  • ema_50
+  • ema_9
+  • ema_{self.long_window}
+  • ema_{self.short_window}
+  • macd_12_26_9
+  • macds_12_26_9
+  • roc_5
+  • rsi_10
+  • rsi_14
+  • sma_20
+  • stoch_d_14
+  • stoch_k_14
+  • supertrend_10_3.0
+  • supertrend_{self.supert_period}_{self.supert_multiplier}
+  • volume_avg
+  • vwap
+
+Total: 26 unique indicators
+
+================================================================================
+PER-STRATEGY BREAKDOWN
+================================================================================
+
+adx_macd_ema.py:
+  • adx_14
+  • atr_14
+  • ema_21
+  • ema_9
+  • macd_12_26_9
+  • macds_12_26_9
+
+adx_volatility_breakout.py:
+  • adx_14
+  • atr_14
+  • ema_21
+
+alpha_trend.py:
+  • adx_14
+  • atr_14
+  • ema_50
+  • rsi_10
+  • supertrend_10_3.0
+  • volume_avg
+
+atr_breakout.py:
+  • atr_14
+
+atr_super_alpha_trend.py:
+  • atr_14
+  • rsi_14
+  • supertrend_10_3.0
+
+bollinger_mean_reversion.py:
+  • atr_14
+  • bb_lower
+  • bb_upper
+
+bollinger_stoch_x.py:
+  • atr_14
+  • bb_lower
+  • bb_upper
+  • stoch_d_14
+  • stoch_k_14
+
+donchian_breakout.py:
+  • atr_14
+
+ema_rolling_adx.py:
+  • adx_14
+  • atr_14
+  • ema_21
+  • ema_9
+
+ichimoku_cloud.py:
+  • atr_14
+
+indian_ema_crossover.py:
+  • atr_14
+  • ema_{self.long_window}
+  • ema_{self.short_window}
+
+indian_rsi_macd.py:
+  • atr_14
+  • macd_12_26_9
+  • macds_12_26_9
+  • rsi_14
+
+keltner_channel_breakout.py:
+  • atr_14
+  • ema_20
+
+macd_crossover.py:
+  • atr_14
+  • macd_12_26_9
+  • macds_12_26_9
+
+macd_stoch_trend.py:
+  • atr_14
+  • macd_12_26_9
+  • macds_12_26_9
+  • sma_20
+  • stoch_d_14
+  • stoch_k_14
+
+macd_trend_volume.py:
+  • atr_14
+  • macd_12_26_9
+  • macds_12_26_9
+
+momentum_breakout.py:
+  • atr_14
+
+momentum_roc.py:
+  • atr_14
+
+rsi_atr_reversal.py:
+  • atr_14
+  • rsi_14
+
+rsi_bb_confluence.py:
+  • atr_14
+  • bb_lower
+  • bb_upper
+  • ema_9
+  • rsi_14
+
+rsi_bb_macd.py:
+  • atr_14
+  • bb_lower
+  • bb_upper
+  • macd_12_26_9
+  • macds_12_26_9
+  • rsi_14
+
+rsi_macd.py:
+  • atr_14
+  • macd_12_26_9
+  • macds_12_26_9
+  • rsi_14
+
+rsi_macd_supertrend.py:
+  • atr_14
+  • macd_12_26_9
+  • macds_12_26_9
+  • rsi_14
+  • supertrend_10_3.0
+
+rsi_oversold.py:
+  • atr_14
+  • rsi_14
+
+stochastic_oscillator.py:
+  • atr_14
+  • stoch_d_14
+  • stoch_k_14
+
+supermomentum_score.py:
+  • adx_14
+  • atr_14
+  • macd_12_26_9
+  • macds_12_26_9
+  • rsi_14
+  • supertrend_10_3.0
+
+supertrend_adx.py:
+  • adx_{self.adx_period}
+  • atr_14
+  • supertrend_{self.supert_period}_{self.supert_multiplier}
+
+support_resistance.py:
+  • atr_14
+
+triple_ema_momentum.py:
+  • atr_14
+  • ema_13
+  • ema_34
+  • ema_5
+  • rsi_14
+
+vwap_momentum.py:
+  • atr_14
+  • roc_5
+  • vwap
+

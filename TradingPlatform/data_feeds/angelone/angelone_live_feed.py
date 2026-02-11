@@ -1,38 +1,21 @@
 """
 Angel One live data feed adapter.
 
-Wraps legacy LiveDataFeeder without modifying its internal logic.
+Wraps the migrated LiveDataFeeder (tick aggregation + WebSocket streaming).
 """
 
-import sys
 import time
 import threading
-from pathlib import Path
 from collections import deque
 from typing import Deque, Dict, Iterable, Optional, Any
 
 from data_feeds.base import BaseDataFeed
-
-
-def _add_legacy_path(*parts: str) -> None:
-    repo_root = Path(__file__).resolve().parents[3]
-    legacy_path = repo_root.joinpath(*parts)
-    sys.path.append(str(legacy_path))
-
-
-_add_legacy_path("IndianMarket", "strategy_tester_app", "app")
-
-try:
-    from LiveDataFeeder import LiveDataFeeder  # type: ignore
-except Exception as exc:  # pragma: no cover - import guard
-    LiveDataFeeder = None
-    _IMPORT_ERROR = exc
-else:
-    _IMPORT_ERROR = None
+from .live_data_feeder import LiveDataFeeder
+from .tick_aggregator import TickAggregator
 
 
 class AngelOneLiveFeed(BaseDataFeed):
-    """Adapter for Angel One live feed using legacy LiveDataFeeder."""
+    """Adapter for Angel One live feed using migrated LiveDataFeeder."""
 
     def __init__(
         self,
@@ -47,8 +30,6 @@ class AngelOneLiveFeed(BaseDataFeed):
         password: Optional[str] = None,
         totp_secret: Optional[str] = None,
     ):
-        if LiveDataFeeder is None:
-            raise ImportError(f"Legacy LiveDataFeeder not available: {_IMPORT_ERROR}")
 
         self._queue: Deque[Dict[str, Any]] = deque()
         self._running = False

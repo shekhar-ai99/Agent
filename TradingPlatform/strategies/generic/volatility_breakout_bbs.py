@@ -236,7 +236,7 @@ class VolatilityBreakoutBBS(BaseStrategy):
                 std_dev=self.bb_stddev
             )
 
-            if bb_result is None:
+            if bb_result is None or bb_result.empty:
                 return Signal(
                     direction="HOLD",
                     confidence=0.0,
@@ -244,7 +244,23 @@ class VolatilityBreakoutBBS(BaseStrategy):
                     reasoning="Bollinger Bands calculation failed"
                 )
 
-            upper_band_series, middle_band_series, lower_band_series = bb_result
+            # Extract BB columns - ta.bbands returns DataFrame with BBL_{period}_{std}, BBM_{period}_{std}, BBU_{period}_{std}, BBB_{period}_{std}
+            bb_cols = bb_result.columns
+            lower_col = [c for c in bb_cols if 'BBL_' in c]
+            middle_col = [c for c in bb_cols if 'BBM_' in c]
+            upper_col = [c for c in bb_cols if 'BBU_' in c]
+            
+            if not lower_col or not middle_col or not upper_col:
+                return Signal(
+                    direction="HOLD",
+                    confidence=0.0,
+                    strategy_name=self.name,
+                    reasoning="Bollinger Bands columns not found"
+                )
+            
+            lower_band_series = bb_result[lower_col[0]]
+            middle_band_series = bb_result[middle_col[0]]
+            upper_band_series = bb_result[upper_col[0]]
 
             if len(upper_band_series) < 2:
                 return Signal(

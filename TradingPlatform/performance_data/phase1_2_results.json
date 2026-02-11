@@ -1,0 +1,1457 @@
+[
+  {
+    "strategy_class": "ADXMACDEMAStrategy",
+    "strategy_name": "ADX_MACD_EMA",
+    "status": "SUCCESS",
+    "buy_signals": 0,
+    "sell_signals": 0,
+    "hold_signals": 50,
+    "errors": 0,
+    "total_tested": 50,
+    "signal_rate": 0.0,
+    "sample_signals": [
+      {
+        "bar": 100,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 101,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 102,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 103,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 104,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      }
+    ]
+  },
+  {
+    "strategy_class": "ADXVolatilityBreakoutStrategy",
+    "strategy_name": "ADX_Volatility_Breakout",
+    "status": "SUCCESS",
+    "buy_signals": 0,
+    "sell_signals": 0,
+    "hold_signals": 50,
+    "errors": 0,
+    "total_tested": 50,
+    "signal_rate": 0.0,
+    "sample_signals": [
+      {
+        "bar": 100,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 101,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 102,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 103,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 104,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      }
+    ]
+  },
+  {
+    "strategy_class": "ATRBreakout",
+    "strategy_name": "ATR_Breakout",
+    "status": "SUCCESS",
+    "buy_signals": 0,
+    "sell_signals": 0,
+    "hold_signals": 50,
+    "errors": 0,
+    "total_tested": 50,
+    "signal_rate": 0.0,
+    "sample_signals": [
+      {
+        "bar": 100,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "No breakout: close=23271.20, band=[23204.57, 23328"
+      },
+      {
+        "bar": 101,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "No breakout: close=23278.55, band=[23210.26, 23332"
+      },
+      {
+        "bar": 102,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "No breakout: close=23277.50, band=[23223.78, 23333"
+      },
+      {
+        "bar": 103,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "No breakout: close=23272.85, band=[23228.64, 23326"
+      },
+      {
+        "bar": 104,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "No breakout: close=23321.75, band=[23219.66, 23326"
+      }
+    ]
+  },
+  {
+    "strategy_class": "ATRSuperAlphaTrendStrategy",
+    "strategy_name": "ATR_SuperAlphaTrend",
+    "status": "SUCCESS",
+    "buy_signals": 0,
+    "sell_signals": 0,
+    "hold_signals": 50,
+    "errors": 0,
+    "total_tested": 50,
+    "signal_rate": 0.0,
+    "sample_signals": [
+      {
+        "bar": 100,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 101,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 102,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 103,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 104,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      }
+    ]
+  },
+  {
+    "strategy_class": "AlphaTrendStrategy",
+    "strategy_name": "AlphaTrend",
+    "status": "SUCCESS",
+    "buy_signals": 0,
+    "sell_signals": 0,
+    "hold_signals": 50,
+    "errors": 0,
+    "total_tested": 50,
+    "signal_rate": 0.0,
+    "sample_signals": [
+      {
+        "bar": 100,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 101,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 102,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 103,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 104,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      }
+    ]
+  },
+  {
+    "strategy_class": "BBMeanReversion",
+    "strategy_name": "BB_MeanReversion_20_2.0",
+    "status": "SUCCESS",
+    "buy_signals": 0,
+    "sell_signals": 0,
+    "hold_signals": 50,
+    "errors": 0,
+    "total_tested": 50,
+    "signal_rate": 0.0,
+    "sample_signals": [
+      {
+        "bar": 100,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Bollinger Band columns not found"
+      },
+      {
+        "bar": 101,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Bollinger Band columns not found"
+      },
+      {
+        "bar": 102,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Bollinger Band columns not found"
+      },
+      {
+        "bar": 103,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Bollinger Band columns not found"
+      },
+      {
+        "bar": 104,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Bollinger Band columns not found"
+      }
+    ]
+  },
+  {
+    "strategy_class": "BollingerMeanReversion",
+    "strategy_name": "IM_BollingerMeanReversion",
+    "status": "SUCCESS",
+    "buy_signals": 5,
+    "sell_signals": 0,
+    "hold_signals": 45,
+    "errors": 0,
+    "total_tested": 50,
+    "signal_rate": 0.1,
+    "sample_signals": [
+      {
+        "bar": 100,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "No band breach: close=23271.20, bands=[23104.62, 2"
+      },
+      {
+        "bar": 101,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "No band breach: close=23278.55, bands=[23103.12, 2"
+      },
+      {
+        "bar": 102,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "No band breach: close=23277.50, bands=[23106.12, 2"
+      },
+      {
+        "bar": 103,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "No band breach: close=23272.85, bands=[23113.17, 2"
+      },
+      {
+        "bar": 104,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "No band breach: close=23321.75, bands=[23119.26, 2"
+      }
+    ]
+  },
+  {
+    "strategy_class": "BollingerStochasticCrossoverStrategy",
+    "strategy_name": "Bollinger_Stoch_X",
+    "status": "SUCCESS",
+    "buy_signals": 0,
+    "sell_signals": 0,
+    "hold_signals": 50,
+    "errors": 0,
+    "total_tested": 50,
+    "signal_rate": 0.0,
+    "sample_signals": [
+      {
+        "bar": 100,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 101,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 102,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 103,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 104,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      }
+    ]
+  },
+  {
+    "strategy_class": "DonchianBreakoutStrategy",
+    "strategy_name": "Donchian_Breakout",
+    "status": "SUCCESS",
+    "buy_signals": 0,
+    "sell_signals": 0,
+    "hold_signals": 0,
+    "errors": 50,
+    "total_tested": 0,
+    "signal_rate": 0,
+    "sample_signals": []
+  },
+  {
+    "strategy_class": "EMACrossover",
+    "strategy_name": "EMA_Crossover_9_21",
+    "status": "SUCCESS",
+    "buy_signals": 0,
+    "sell_signals": 1,
+    "hold_signals": 49,
+    "errors": 0,
+    "total_tested": 50,
+    "signal_rate": 0.02,
+    "sample_signals": [
+      {
+        "bar": 100,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "No crossover: EMA9=23243.40, EMA21=23221.93"
+      },
+      {
+        "bar": 101,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "No crossover: EMA9=23250.43, EMA21=23227.08"
+      },
+      {
+        "bar": 102,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "No crossover: EMA9=23255.84, EMA21=23231.66"
+      },
+      {
+        "bar": 103,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "No crossover: EMA9=23259.25, EMA21=23235.41"
+      },
+      {
+        "bar": 104,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "No crossover: EMA9=23271.75, EMA21=23243.26"
+      }
+    ]
+  },
+  {
+    "strategy_class": "EMARollingADXStrategy",
+    "strategy_name": "EMA_Rolling_ADX",
+    "status": "SUCCESS",
+    "buy_signals": 0,
+    "sell_signals": 0,
+    "hold_signals": 50,
+    "errors": 0,
+    "total_tested": 50,
+    "signal_rate": 0.0,
+    "sample_signals": [
+      {
+        "bar": 100,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 101,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 102,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 103,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 104,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      }
+    ]
+  },
+  {
+    "strategy_class": "IchimokuCloudStrategy",
+    "strategy_name": "Ichimoku_Cloud",
+    "status": "SUCCESS",
+    "buy_signals": 0,
+    "sell_signals": 0,
+    "hold_signals": 50,
+    "errors": 0,
+    "total_tested": 50,
+    "signal_rate": 0.0,
+    "sample_signals": [
+      {
+        "bar": 100,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 101,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 102,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 103,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 104,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      }
+    ]
+  },
+  {
+    "strategy_class": "IndianEMACrossover",
+    "strategy_name": "IM_EMACrossover",
+    "status": "SUCCESS",
+    "buy_signals": 0,
+    "sell_signals": 1,
+    "hold_signals": 49,
+    "errors": 0,
+    "total_tested": 50,
+    "signal_rate": 0.02,
+    "sample_signals": [
+      {
+        "bar": 100,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "No crossover: ema_9=23243.40, ema_21=23221.93"
+      },
+      {
+        "bar": 101,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "No crossover: ema_9=23250.43, ema_21=23227.08"
+      },
+      {
+        "bar": 102,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "No crossover: ema_9=23255.84, ema_21=23231.66"
+      },
+      {
+        "bar": 103,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "No crossover: ema_9=23259.25, ema_21=23235.41"
+      },
+      {
+        "bar": 104,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "No crossover: ema_9=23271.75, ema_21=23243.26"
+      }
+    ]
+  },
+  {
+    "strategy_class": "IndianRSIMACD",
+    "strategy_name": "IM_RSIMACD",
+    "status": "SUCCESS",
+    "buy_signals": 0,
+    "sell_signals": 0,
+    "hold_signals": 50,
+    "errors": 0,
+    "total_tested": 50,
+    "signal_rate": 0.0,
+    "sample_signals": [
+      {
+        "bar": 100,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "No signal: rsi_14=76.88, macd_12_26_9=15.62, macds"
+      },
+      {
+        "bar": 101,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "No signal: rsi_14=85.56, macd_12_26_9=17.95, macds"
+      },
+      {
+        "bar": 102,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "No signal: rsi_14=83.39, macd_12_26_9=19.49, macds"
+      },
+      {
+        "bar": 103,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "No signal: rsi_14=78.22, macd_12_26_9=20.10, macds"
+      },
+      {
+        "bar": 104,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "No signal: rsi_14=87.57, macd_12_26_9=24.25, macds"
+      }
+    ]
+  },
+  {
+    "strategy_class": "KeltnerChannelBreakoutStrategy",
+    "strategy_name": "Keltner_Channel_Breakout",
+    "status": "SUCCESS",
+    "buy_signals": 0,
+    "sell_signals": 0,
+    "hold_signals": 50,
+    "errors": 0,
+    "total_tested": 50,
+    "signal_rate": 0.0,
+    "sample_signals": [
+      {
+        "bar": 100,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 101,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 102,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 103,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 104,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      }
+    ]
+  },
+  {
+    "strategy_class": "MACDCrossoverStrategy",
+    "strategy_name": "MACD_Crossover",
+    "status": "SUCCESS",
+    "buy_signals": 0,
+    "sell_signals": 0,
+    "hold_signals": 50,
+    "errors": 0,
+    "total_tested": 50,
+    "signal_rate": 0.0,
+    "sample_signals": [
+      {
+        "bar": 100,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 101,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 102,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 103,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 104,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      }
+    ]
+  },
+  {
+    "strategy_class": "MACDStochasticTrendStrategy",
+    "strategy_name": "MACD_Stoch_Trend",
+    "status": "SUCCESS",
+    "buy_signals": 0,
+    "sell_signals": 0,
+    "hold_signals": 50,
+    "errors": 0,
+    "total_tested": 50,
+    "signal_rate": 0.0,
+    "sample_signals": [
+      {
+        "bar": 100,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 101,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 102,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 103,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 104,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      }
+    ]
+  },
+  {
+    "strategy_class": "MACDTrendVolumeStrategy",
+    "strategy_name": "MACD_Trend_Volume",
+    "status": "SUCCESS",
+    "buy_signals": 0,
+    "sell_signals": 0,
+    "hold_signals": 50,
+    "errors": 0,
+    "total_tested": 50,
+    "signal_rate": 0.0,
+    "sample_signals": [
+      {
+        "bar": 100,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 101,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 102,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 103,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 104,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      }
+    ]
+  },
+  {
+    "strategy_class": "MomentumBreakout",
+    "strategy_name": "Momentum_Breakout",
+    "status": "SUCCESS",
+    "buy_signals": 3,
+    "sell_signals": 13,
+    "hold_signals": 34,
+    "errors": 0,
+    "total_tested": 50,
+    "signal_rate": 0.32,
+    "sample_signals": [
+      {
+        "bar": 100,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "No breakout: close=23271.20, rolling_max=23279.20,"
+      },
+      {
+        "bar": 101,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "No breakout: close=23278.55, rolling_max=23279.20,"
+      },
+      {
+        "bar": 102,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "No breakout: close=23277.50, rolling_max=23279.20,"
+      },
+      {
+        "bar": 103,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "No breakout: close=23272.85, rolling_max=23279.20,"
+      },
+      {
+        "bar": 104,
+        "direction": "BUY",
+        "confidence": 0.6,
+        "reasoning": "Momentum breakout BUY: close=23321.75 > rolling_ma"
+      }
+    ]
+  },
+  {
+    "strategy_class": "MomentumStrategy",
+    "strategy_name": "Momentum_ROC",
+    "status": "SUCCESS",
+    "buy_signals": 0,
+    "sell_signals": 0,
+    "hold_signals": 50,
+    "errors": 0,
+    "total_tested": 50,
+    "signal_rate": 0.0,
+    "sample_signals": [
+      {
+        "bar": 100,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 101,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 102,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 103,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 104,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      }
+    ]
+  },
+  {
+    "strategy_class": "OpeningRangeBreakout",
+    "strategy_name": "OpeningRangeBreakout_915_15m_0.5pct",
+    "status": "SUCCESS",
+    "buy_signals": 10,
+    "sell_signals": 23,
+    "hold_signals": 17,
+    "errors": 0,
+    "total_tested": 50,
+    "signal_rate": 0.66,
+    "sample_signals": [
+      {
+        "bar": 100,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "No breakout: close=23271.20 within [23177.23, 2329"
+      },
+      {
+        "bar": 101,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "No breakout: close=23278.55 within [23177.23, 2329"
+      },
+      {
+        "bar": 102,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "No breakout: close=23277.50 within [23177.23, 2329"
+      },
+      {
+        "bar": 103,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "No breakout: close=23272.85 within [23177.23, 2329"
+      },
+      {
+        "bar": 104,
+        "direction": "BUY",
+        "confidence": 0.703982494529543,
+        "reasoning": "Bullish ORB breakout: close=23321.75 > ORB_high+bu"
+      }
+    ]
+  },
+  {
+    "strategy_class": "RSIATRReversalStrategy",
+    "strategy_name": "RSI_ATR_Reversal",
+    "status": "SUCCESS",
+    "buy_signals": 0,
+    "sell_signals": 0,
+    "hold_signals": 50,
+    "errors": 0,
+    "total_tested": 50,
+    "signal_rate": 0.0,
+    "sample_signals": [
+      {
+        "bar": 100,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 101,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 102,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 103,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 104,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      }
+    ]
+  },
+  {
+    "strategy_class": "RSIBollingerConfluenceStrategy",
+    "strategy_name": "RSI_BB_Confluence",
+    "status": "SUCCESS",
+    "buy_signals": 0,
+    "sell_signals": 0,
+    "hold_signals": 50,
+    "errors": 0,
+    "total_tested": 50,
+    "signal_rate": 0.0,
+    "sample_signals": [
+      {
+        "bar": 100,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 101,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 102,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 103,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 104,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      }
+    ]
+  },
+  {
+    "strategy_class": "RSIBollingerMACDStrategy",
+    "strategy_name": "RSI_BB_MACD",
+    "status": "SUCCESS",
+    "buy_signals": 0,
+    "sell_signals": 0,
+    "hold_signals": 50,
+    "errors": 0,
+    "total_tested": 50,
+    "signal_rate": 0.0,
+    "sample_signals": [
+      {
+        "bar": 100,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 101,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 102,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 103,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 104,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      }
+    ]
+  },
+  {
+    "strategy_class": "RSIMACDStrategy",
+    "strategy_name": "RSI_MACD",
+    "status": "SUCCESS",
+    "buy_signals": 0,
+    "sell_signals": 0,
+    "hold_signals": 50,
+    "errors": 0,
+    "total_tested": 50,
+    "signal_rate": 0.0,
+    "sample_signals": [
+      {
+        "bar": 100,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 101,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 102,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 103,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 104,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      }
+    ]
+  },
+  {
+    "strategy_class": "RSIMACDSuperTrendStrategy",
+    "strategy_name": "RSI_MACD_SuperTrend",
+    "status": "SUCCESS",
+    "buy_signals": 0,
+    "sell_signals": 0,
+    "hold_signals": 50,
+    "errors": 0,
+    "total_tested": 50,
+    "signal_rate": 0.0,
+    "sample_signals": [
+      {
+        "bar": 100,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 101,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 102,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 103,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 104,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      }
+    ]
+  },
+  {
+    "strategy_class": "RSISlope",
+    "strategy_name": "RSI_Slope_14_30_70_3",
+    "status": "SUCCESS",
+    "buy_signals": 7,
+    "sell_signals": 3,
+    "hold_signals": 40,
+    "errors": 0,
+    "total_tested": 50,
+    "signal_rate": 0.2,
+    "sample_signals": [
+      {
+        "bar": 100,
+        "direction": "SELL",
+        "confidence": 1.0,
+        "reasoning": "Overbought reversal: RSI=80.84 (> 70) + negative s"
+      },
+      {
+        "bar": 101,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "No signal: RSI=36.42, slope=1.29, thresholds=[0.5,"
+      },
+      {
+        "bar": 102,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "No signal: RSI=48.02, slope=0.75, thresholds=[0.5,"
+      },
+      {
+        "bar": 103,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "No signal: RSI=57.14, slope=-1.02, thresholds=[0.5"
+      },
+      {
+        "bar": 104,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "No signal: RSI=69.30, slope=4.21, thresholds=[0.5,"
+      }
+    ]
+  },
+  {
+    "strategy_class": "RSIStrategy",
+    "strategy_name": "RSI_Oversold",
+    "status": "SUCCESS",
+    "buy_signals": 0,
+    "sell_signals": 0,
+    "hold_signals": 50,
+    "errors": 0,
+    "total_tested": 50,
+    "signal_rate": 0.0,
+    "sample_signals": [
+      {
+        "bar": 100,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 101,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 102,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 103,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 104,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      }
+    ]
+  },
+  {
+    "strategy_class": "StochasticOscillatorStrategy",
+    "strategy_name": "Stochastic_Oscillator",
+    "status": "SUCCESS",
+    "buy_signals": 0,
+    "sell_signals": 0,
+    "hold_signals": 50,
+    "errors": 0,
+    "total_tested": 50,
+    "signal_rate": 0.0,
+    "sample_signals": [
+      {
+        "bar": 100,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 101,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 102,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 103,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 104,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      }
+    ]
+  },
+  {
+    "strategy_class": "SuperMomentumStrategy",
+    "strategy_name": "SuperMomentum_Score",
+    "status": "SUCCESS",
+    "buy_signals": 0,
+    "sell_signals": 0,
+    "hold_signals": 50,
+    "errors": 0,
+    "total_tested": 50,
+    "signal_rate": 0.0,
+    "sample_signals": [
+      {
+        "bar": 100,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 101,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 102,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 103,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 104,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      }
+    ]
+  },
+  {
+    "strategy_class": "SuperTrendADX",
+    "strategy_name": "IM_SuperTrendADX",
+    "status": "SUCCESS",
+    "buy_signals": 49,
+    "sell_signals": 0,
+    "hold_signals": 1,
+    "errors": 0,
+    "total_tested": 50,
+    "signal_rate": 0.98,
+    "sample_signals": [
+      {
+        "bar": 100,
+        "direction": "BUY",
+        "confidence": 0.6,
+        "reasoning": "SuperTrendADX BUY: ADX strong and close above Supe"
+      },
+      {
+        "bar": 101,
+        "direction": "BUY",
+        "confidence": 0.6,
+        "reasoning": "SuperTrendADX BUY: ADX strong and close above Supe"
+      },
+      {
+        "bar": 102,
+        "direction": "BUY",
+        "confidence": 0.6,
+        "reasoning": "SuperTrendADX BUY: ADX strong and close above Supe"
+      },
+      {
+        "bar": 103,
+        "direction": "BUY",
+        "confidence": 0.6,
+        "reasoning": "SuperTrendADX BUY: ADX strong and close above Supe"
+      },
+      {
+        "bar": 104,
+        "direction": "BUY",
+        "confidence": 0.6,
+        "reasoning": "SuperTrendADX BUY: ADX strong and close above Supe"
+      }
+    ]
+  },
+  {
+    "strategy_class": "SuperTrendADXTrend",
+    "strategy_name": "SuperTrend_ADX_10_3.0_14_25",
+    "status": "SUCCESS",
+    "buy_signals": 12,
+    "sell_signals": 10,
+    "hold_signals": 28,
+    "errors": 0,
+    "total_tested": 50,
+    "signal_rate": 0.44,
+    "sample_signals": [
+      {
+        "bar": 100,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "ADX too weak (23.58 < 25). ST direction: 1.0"
+      },
+      {
+        "bar": 101,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "ADX too weak (20.57 < 25). ST direction: 1.0"
+      },
+      {
+        "bar": 102,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "ADX too weak (24.62 < 25). ST direction: 1.0"
+      },
+      {
+        "bar": 103,
+        "direction": "BUY",
+        "confidence": 0.6224578071450031,
+        "reasoning": "Bullish SuperTrend (dir=1.0) + Strong ADX (26.40 >"
+      },
+      {
+        "bar": 104,
+        "direction": "BUY",
+        "confidence": 0.6394448344015223,
+        "reasoning": "Bullish SuperTrend (dir=1.0) + Strong ADX (27.47 >"
+      }
+    ]
+  },
+  {
+    "strategy_class": "SupportResistanceStrategy",
+    "strategy_name": "Support_Resistance",
+    "status": "SUCCESS",
+    "buy_signals": 0,
+    "sell_signals": 0,
+    "hold_signals": 50,
+    "errors": 0,
+    "total_tested": 50,
+    "signal_rate": 0.0,
+    "sample_signals": [
+      {
+        "bar": 100,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 101,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 102,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 103,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      },
+      {
+        "bar": 104,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Strategy logic not yet implemented"
+      }
+    ]
+  },
+  {
+    "strategy_class": "TripleEMAMomentumStrategy",
+    "strategy_name": "Triple_EMA_Momentum",
+    "status": "SUCCESS",
+    "buy_signals": 0,
+    "sell_signals": 0,
+    "hold_signals": 0,
+    "errors": 50,
+    "total_tested": 0,
+    "signal_rate": 0,
+    "sample_signals": []
+  },
+  {
+    "strategy_class": "VWAPMomentumStrategy",
+    "strategy_name": "VWAP_Momentum",
+    "status": "SUCCESS",
+    "buy_signals": 0,
+    "sell_signals": 0,
+    "hold_signals": 0,
+    "errors": 50,
+    "total_tested": 0,
+    "signal_rate": 0,
+    "sample_signals": []
+  },
+  {
+    "strategy_class": "VolatilityBreakoutBBS",
+    "strategy_name": "VolatilityBreakout_BBS_20_2.0_sq20_1.05",
+    "status": "SUCCESS",
+    "buy_signals": 0,
+    "sell_signals": 1,
+    "hold_signals": 49,
+    "errors": 0,
+    "total_tested": 50,
+    "signal_rate": 0.02,
+    "sample_signals": [
+      {
+        "bar": 100,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Insufficient data: need 140 bars"
+      },
+      {
+        "bar": 101,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Insufficient data: need 140 bars"
+      },
+      {
+        "bar": 102,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Insufficient data: need 140 bars"
+      },
+      {
+        "bar": 103,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Insufficient data: need 140 bars"
+      },
+      {
+        "bar": 104,
+        "direction": "HOLD",
+        "confidence": 0.0,
+        "reasoning": "Insufficient data: need 140 bars"
+      }
+    ]
+  }
+]

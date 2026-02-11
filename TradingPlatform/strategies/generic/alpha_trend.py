@@ -63,4 +63,9 @@ class AlphaTrendStrategy(BaseStrategy):
         }
 
     def generate_signal(self, context: StrategyContext) -> Signal:
-        raise NotImplementedError("Logic to be inserted after approval.")
+        return Signal(
+            direction="HOLD",
+            confidence=0.0,
+            strategy_name=self.name,
+            reasoning="Strategy logic not yet implemented"
+        )

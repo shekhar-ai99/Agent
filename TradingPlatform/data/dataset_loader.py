@@ -8,6 +8,7 @@ import pandas as pd
 from pathlib import Path
 from typing import Dict, Optional, Tuple
 import logging
+import numpy as np
 
 logger = logging.getLogger(__name__)
 
@@ -134,14 +135,18 @@ class DatasetLoader:
         """
         Add common technical indicators to OHLCV data.
         
-        Adds:
-        - SMA20, SMA50 (Simple Moving Average)
-        - EMA20, EMA50 (Exponential Moving Average) [Preserved from legacy]
-        - RSI14 (Relative Strength Index)
-        - ATR14 (Average True Range)
-        - Bollinger Bands (20-period, 2 std)
-        - SuperTrend (10-period, 3.0 multiplier) [Preserved from legacy]
-        - ADX14 (Average Directional Index) [Preserved from legacy]
+        TIER 1 (CORE - Required for all strategies):
+        - rsi_14 (Relative Strength Index, 14-period)
+        - atr_14 (Average True Range, 14-period)
+        - ema_20, ema_50 (Exponential Moving Averages)
+        - bb_upper, bb_lower (Bollinger Bands 20, 2σ)
+        - supertrend_10_3.0 (SuperTrend 10-period, 3.0 multiplier)
+        - adx_14 (Average Directional Index)
+        - macd_12_26_9, macds_12_26_9 (MACD)
+        
+        TIER 2 (EXTENDED):
+        - ema_5, ema_9, ema_13, ema_21, ema_34 (EMA variants)
+        - stoch_k_14, stoch_d_14 (Stochastic)
         
         Args:
             df: DataFrame with OHLCV data
@@ -151,50 +156,86 @@ class DatasetLoader:
         """
         df = df.copy()
         
-        # Simple Moving Averages
+        # ===== TIER 1: CORE INDICATORS =====
+        
+        # SMA (Simple Moving Averages)
         logger.info("Calculating SMA20, SMA50...")
-        df['SMA_20'] = df['close'].rolling(window=20).mean()
-        df['SMA_50'] = df['close'].rolling(window=50).mean()
+        df['sma_20'] = df['close'].rolling(window=20).mean()
+        df['sma_50'] = df['close'].rolling(window=50).mean()
         
-        # Exponential Moving Averages [Preserved from legacy: analysis_engine.py]
-        logger.info("Calculating EMA20, EMA50...")
-        df['EMA_20'] = df['close'].ewm(span=20, adjust=False).mean()
-        df['EMA_50'] = df['close'].ewm(span=50, adjust=False).mean()
+        # EMA (Exponential Moving Averages) - TIER 1 & 2
+        logger.info("Calculating EMAs (5, 9, 13, 20, 21, 34, 50)...")
+        for period in [5, 9, 13, 20, 21, 34, 50]:
+            df[f'ema_{period}'] = df['close'].ewm(span=period, adjust=False).mean()
         
-        # RSI (14-period)
-        logger.info("Calculating RSI14...")
+        # RSI (14-period) - RENAMED: RSI → rsi_14
+        logger.info("Calculating rsi_14...")
         delta = df['close'].diff()
         gain = (delta.where(delta > 0, 0)).rolling(window=14).mean()
         loss = (-delta.where(delta < 0, 0)).rolling(window=14).mean()
         rs = gain / loss
-        df['RSI'] = 100 - (100 / (1 + rs))
+        df['rsi_14'] = 100 - (100 / (1 + rs))
         
-        # ATR (14-period)
-        logger.info("Calculating ATR14...")
+        # RSI with 10-period (for strategies needing rsi_10)
+        logger.info("Calculating rsi_10...")
+        delta10 = df['close'].diff()
+        gain10 = (delta10.where(delta10 > 0, 0)).rolling(window=10).mean()
+        loss10 = (-delta10.where(delta10 < 0, 0)).rolling(window=10).mean()
+        rs10 = gain10 / loss10
+        df['rsi_10'] = 100 - (100 / (1 + rs10))
+        
+        # ATR (14-period) - RENAMED: ATR → atr_14
+        logger.info("Calculating atr_14...")
         tr = pd.concat([
             df['high'] - df['low'],
             abs(df['high'] - df['close'].shift()),
             abs(df['low'] - df['close'].shift()),
         ], axis=1).max(axis=1)
-        df['ATR'] = tr.rolling(window=14).mean()
+        df['atr_14'] = tr.rolling(window=14).mean()
         
         # Bollinger Bands (20-period, 2 std)
         logger.info("Calculating Bollinger Bands...")
         bb_middle = df['close'].rolling(window=20).mean()
         bb_std = df['close'].rolling(window=20).std()
-        df['BB_Middle'] = bb_middle
-        df['BB_Upper'] = bb_middle + (bb_std * 2)
-        df['BB_Lower'] = bb_middle - (bb_std * 2)
+        df['bb_middle'] = bb_middle
+        df['bb_upper'] = bb_middle + (bb_std * 2)
+        df['bb_lower'] = bb_middle - (bb_std * 2)
         
-        # SuperTrend (10-period, 3.0 multiplier) [Preserved from legacy: Common/strategies.py]
-        logger.info("Calculating SuperTrend...")
+        # SuperTrend (10-period, 3.0 multiplier) - RENAMED: SUPERT_10 → supertrend_10_3.0
+        logger.info("Calculating supertrend_10_3.0...")
         df = DatasetLoader._add_supertrend(df, period=10, multiplier=3.0)
         
-        # ADX (14-period) [Preserved from legacy: Common/strategies.py]
-        logger.info("Calculating ADX...")
+        # SuperTrend (10-period, 2.0 multiplier) - For strategies with lower multiplier
+        logger.info("Calculating supertrend_10_2.0...")
+        df = DatasetLoader._add_supertrend(df, period=10, multiplier=2.0)
+        
+        # ADX (14-period)
+        logger.info("Calculating adx_14...")
         df = DatasetLoader._add_adx(df, period=14)
         
-        logger.info("Indicators added successfully")
+        # MACD (12/26/9) - NEW
+        logger.info("Calculating MACD (12, 26, 9)...")
+        df = DatasetLoader._add_macd(df, fast=12, slow=26, signal=9)
+        
+        # ===== TIER 2: EXTENDED INDICATORS =====
+        
+        # Stochastic K & D (14-period)
+        logger.info("Calculating Stochastic K & D (14-period)...")
+        df = DatasetLoader._add_stochastic(df, period=14)
+        
+        # Rate of Change (5-period)
+        logger.info("Calculating ROC (5-period)...")
+        df['roc_5'] = df['close'].pct_change(periods=5) * 100
+        
+        # VWAP (Volume Weighted Average Price)
+        logger.info("Calculating VWAP...")
+        df = DatasetLoader._add_vwap(df)
+        
+        # Volume Average (for volume-based strategies)
+        logger.info("Calculating volume_avg...")
+        df['volume_avg'] = df['volume'].rolling(window=20).mean()
+        
+        logger.info(f"Indicators added successfully. DataFrame shape: {df.shape}")
         return df
     
     @staticmethod
@@ -234,8 +275,10 @@ class DatasetLoader:
                     if upper_band.iloc[i] > supertrend[i]:
                         supertrend[i] = upper_band.iloc[i]
         
-        df[f'SUPERT_{period}'] = supertrend
-        df[f'SUPERTD_{period}'] = direction
+        # Use snake_case naming: supertrend_10_3.0
+        supertrend_col = f'supertrend_{period}_{multiplier}'
+        df[supertrend_col] = supertrend
+        df[f'{supertrend_col}_direction'] = direction
         
         return df
     
@@ -252,33 +295,165 @@ class DatasetLoader:
     @staticmethod
     def _add_adx(df: pd.DataFrame, period: int = 14) -> pd.DataFrame:
         """
-        Calculate ADX (Average Directional Index).
+        Calculate ADX (Average Directional Index) using pandas_ta.
         
-        Preserves logic from: Common/strategies.py::create_supertrend_adx_strategy
+        Uses vectorized operations for efficiency.
         """
-        # Calculate Directional Movements
+        try:
+            import pandas_ta as ta
+            # Use pandas_ta for ADX calculation
+            adx_result = ta.adx(df['high'], df['low'], df['close'], length=period)
+            
+            if adx_result is not None and not adx_result.empty:
+                # pandas_ta returns DataFrame with ADX_{period}, DMP_{period}, DMN_{period} columns
+                adx_col = f'ADX_{period}'
+                if adx_col in adx_result.columns:
+                    df[f'adx_{period}'] = adx_result[adx_col]
+                    logger.info(f"ADX calculated successfully using pandas_ta")
+                    return df
+        except Exception as e:
+            logger.warning(f"pandas_ta ADX failed: {e}, falling back to manual calculation")
+        
+        # Fallback: Manual calculation using pandas vectorized operations
         up_move = df['high'].diff()
         down_move = -df['low'].diff()
         
-        pos_dm = [0.0] * len(df)
-        neg_dm = [0.0] * len(df)
+        # Directional movements (vectorized)
+        pos_dm = pd.Series(0.0, index=df.index)
+        neg_dm = pd.Series(0.0, index=df.index)
         
-        for i in range(1, len(df)):
-            if up_move.iloc[i] > down_move.iloc[i] and up_move.iloc[i] > 0:
-                pos_dm[i] = up_move.iloc[i]
-            if down_move.iloc[i] > up_move.iloc[i] and down_move.iloc[i] > 0:
-                neg_dm[i] = down_move.iloc[i]
+        pos_dm = pd.Series(np.where((up_move > down_move) & (up_move > 0), up_move, 0.0), index=df.index)
+        neg_dm = pd.Series(np.where((down_move > up_move) & (down_move > 0), down_move, 0.0), index=df.index)
         
+        # ATR
         atr = DatasetLoader._calculate_atr(df, period)
         
-        pos_di = 100 * pd.Series(pos_dm).rolling(period).mean() / (atr + 1e-10)
-        neg_di = 100 * pd.Series(neg_dm).rolling(period).mean() / (atr + 1e-10)
+        # Directional indicators (smooth with EMA)
+        pos_di = 100 * pos_dm.ewm(span=period, adjust=False).mean() / (atr + 1e-10)
+        neg_di = 100 * neg_dm.ewm(span=period, adjust=False).mean() / (atr + 1e-10)
         
+        # DX and ADX
         di_diff = abs(pos_di - neg_di)
         di_sum = pos_di + neg_di
-        
         dx = 100 * di_diff / (di_sum + 1e-10)
-        df[f'ADX_{period}'] = dx.rolling(period).mean()
+        
+        # Smooth DX to get ADX
+        df[f'adx_{period}'] = dx.ewm(span=period, adjust=False).mean()
+        
+        return df
+    
+    @staticmethod
+    def _add_macd(df: pd.DataFrame, fast: int = 12, slow: int = 26, signal: int = 9) -> pd.DataFrame:
+        """
+        Calculate MACD (Moving Average Convergence Divergence).
+        
+        Parameters:
+            df: DataFrame with OHLCV data
+            fast: Fast EMA period (default 12)
+            slow: Slow EMA period (default 26)
+            signal: Signal line EMA period (default 9)
+            
+        Returns:
+            DataFrame with MACD columns added
+        """
+        # Calculate EMA lines
+        ema_fast = df['close'].ewm(span=fast, adjust=False).mean()
+        ema_slow = df['close'].ewm(span=slow, adjust=False).mean()
+        
+        # MACD line = fast EMA - slow EMA
+        macd = ema_fast - ema_slow
+        
+        # Signal line = 9-period EMA of MACD
+        signal_line = macd.ewm(span=signal, adjust=False).mean()
+        
+        # Histogram = MACD - Signal
+        histogram = macd - signal_line
+        
+        # Add to DataFrame
+        df[f'macd_{fast}_{slow}_{signal}'] = macd
+        df[f'macds_{fast}_{slow}_{signal}'] = signal_line
+        df[f'macdh_{fast}_{slow}_{signal}'] = histogram
+        
+        return df
+    
+    @staticmethod
+    def _add_stochastic(df: pd.DataFrame, period: int = 14, smooth_k: int = 3, smooth_d: int = 3) -> pd.DataFrame:
+        """
+        Calculate Stochastic Oscillator.
+        
+        Parameters:
+            df: DataFrame with OHLCV data
+            period: Period for K calculation (default 14)
+            smooth_k: Smoothing period for K line (default 3)
+            smooth_d: Smoothing period for D line (default 3)
+            
+        Returns:
+            DataFrame with Stochastic columns added
+        """
+        # Find the lowest low and highest high over the period
+        low_min = df['low'].rolling(window=period).min()
+        high_max = df['high'].rolling(window=period).max()
+        
+        # Calculate raw K
+        k_raw = (df['close'] - low_min) / (high_max - low_min) * 100
+        
+        # Smooth K
+        k_line = k_raw.rolling(window=smooth_k).mean()
+        
+        # D line = SMA of K
+        d_line = k_line.rolling(window=smooth_d).mean()
+        
+        # Add to DataFrame
+        df[f'stoch_k_{period}'] = k_line
+        df[f'stoch_d_{period}'] = d_line
+        
+        return df
+    
+    @staticmethod
+    def _add_vwap(df: pd.DataFrame) -> pd.DataFrame:
+        """
+        Calculate VWAP (Volume Weighted Average Price).
+        
+        VWAP resets daily. For intraday data without proper date grouping,
+        we calculate session-based VWAP.
+        """
+        df = df.copy()
+        
+        # Check if we have volume data
+        if df['volume'].isna().all() or (df['volume'] == 0).all():
+            logger.warning("Volume data is missing or zero, using close price for VWAP")
+            df['vwap'] = df['close']
+            return df
+        
+        # Typical price
+        typical_price = (df['high'] + df['low'] + df['close']) / 3
+        
+        # Try to group by date for proper daily VWAP
+        try:
+            if hasattr(df.index, 'date'):
+                # Group by date
+                df['date'] = df.index.date
+                df['tp_vol'] = typical_price * df['volume']
+                
+                # Calculate cumulative sums per date
+                df['cum_tp_vol'] = df.groupby('date')['tp_vol'].cumsum()
+                df['cum_vol'] = df.groupby('date')['volume'].cumsum()
+                
+                # VWAP
+                df['vwap'] = df['cum_tp_vol'] / (df['cum_vol'] + 1e-10)
+                
+                # Clean up temporary columns
+                df = df.drop(columns=['date', 'tp_vol', 'cum_tp_vol', 'cum_vol'])
+            else:
+                # Fallback: cumulative VWAP
+                df['tp_vol'] = typical_price * df['volume']
+                df['vwap'] = df['tp_vol'].cumsum() / (df['volume'].cumsum() + 1e-10)
+                df = df.drop(columns=['tp_vol'])
+        except Exception as e:
+            logger.warning(f"VWAP date grouping failed: {e}, using cumulative VWAP")
+            df['tp_vol'] = typical_price * df['volume']
+            df['vwap'] = df['tp_vol'].cumsum() / (df['volume'].cumsum() + 1e-10)
+            df = df.drop(columns=['tp_vol'])
         
         return df
     
